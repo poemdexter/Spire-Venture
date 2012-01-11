@@ -49,7 +49,7 @@ namespace SpireVenture.screens.screens
                         // start local server and join
                         break;
                     case (int)MainMenuEntry.Multiplayer:
-                        // connect to thing screen
+                        screenManager.AddScreen(new IPInputScreen(this));
                         break;
                     case (int)MainMenuEntry.Exit:
                         screenManager.Game.Exit();

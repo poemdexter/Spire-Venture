@@ -96,6 +96,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -117,7 +118,9 @@
     <Compile Include="screens\framework\GameScreen.cs" />
     <Compile Include="screens\framework\InputState.cs" />
     <Compile Include="screens\framework\MenuEntry.cs" />
+    <Compile Include="screens\screens\IPInputScreen.cs" />
     <Compile Include="screens\screens\MainMenuScreen.cs" />
+    <Compile Include="util\KeyboardStringBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
