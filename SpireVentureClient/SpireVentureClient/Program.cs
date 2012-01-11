@@ -1,6 +1,6 @@
 using System;
 
-namespace SpireVenture
+namespace SpireVentureClient
 {
 #if WINDOWS || XBOX
     static class Program
