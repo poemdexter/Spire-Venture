@@ -15,7 +15,7 @@ namespace SpireVentureServer
         {
             NetPeerConfiguration config = new NetPeerConfiguration("SpireServer");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
-            config.NetworkThreadName = "poemdexter's server";
+            config.NetworkThreadName = "Spire Server";
             config.Port = 9007;
             server = new NetServer(config);
         }
@@ -29,7 +29,6 @@ namespace SpireVentureServer
         {
             this.server.Start();
             this.running = true;
-
             while (running)
             {
                 NetIncomingMessage msg;
@@ -38,6 +37,9 @@ namespace SpireVentureServer
                     switch (msg.MessageType)
                     {
                         case NetIncomingMessageType.DiscoveryRequest:
+                            Console.WriteLine("discovery request");
+                            server.SendDiscoveryResponse(null, msg.SenderEndpoint);
+                            break;
                         case NetIncomingMessageType.VerboseDebugMessage:
                         case NetIncomingMessageType.DebugMessage:
                         case NetIncomingMessageType.WarningMessage:
