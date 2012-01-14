@@ -13,7 +13,7 @@ namespace SpireVenture.util
         public String Keyword { get; private set; }
         public String HashedCombo { get; private set; }
         Dictionary<string, string> optionsDict;
-
+        private bool changed = false;
         private static ClientOptions instance;
 
         // i'm a singleton!
@@ -79,22 +79,59 @@ namespace SpireVenture.util
             }
         }
 
+        public void Save()
+        {
+            if (changed)
+            {
+                String documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                String clientPath = Path.Combine(documentsPath, "SpireVenture");
+                String optionsFilePath = Path.Combine(clientPath, "options.txt");
+
+                if (!Directory.Exists(clientPath))
+                    Directory.CreateDirectory(clientPath);
+
+                File.Delete(optionsFilePath); // delete if there, doesn't throw error if not
+
+                StringBuilder sb = new StringBuilder();
+                foreach (string key in optionsDict.Keys)
+                {
+                    sb.AppendLine(key + ":" + optionsDict[key]);
+                }
+
+                using (StreamWriter outfile = new StreamWriter(optionsFilePath))
+                    outfile.Write(sb.ToString());
+
+                changed = false;
+
+                Console.Write("wrote");
+            }
+        }
+
         public void setKeyword(String word)
         {
-            // on new keyword, save Keyword
+            changed = true;
             Keyword = word;
             if (optionsDict.ContainsKey("keyword"))
             {
                 optionsDict["keyword"] = word;
             }
+            else
+            {
+                optionsDict.Add("keyword", word);
+            }
         }
 
         public void setUsername(String word)
         {
+            changed = true;
             Username = word;
             if (optionsDict.ContainsKey("username"))
             {
                 optionsDict["username"] = word;
+            }
+            else 
+            {
+                optionsDict.Add("username", word);
             }
         }
     }

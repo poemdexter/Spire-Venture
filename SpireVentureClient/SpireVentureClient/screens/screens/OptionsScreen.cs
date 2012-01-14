@@ -96,6 +96,7 @@ namespace SpireVenture.screens.screens
                         }
                         break;
                     case (int)OptionsEntry.Exit:
+                        ClientOptions.Instance.Save(); // save client options
                         screenManager.RemoveScreen(this);
                         ParentScreen.currentScreenState = ScreenState.Active;
                         break;
@@ -117,6 +118,7 @@ namespace SpireVenture.screens.screens
                 }
                 else
                 {
+                    ClientOptions.Instance.Save();
                     screenManager.RemoveScreen(this);
                     ParentScreen.currentScreenState = ScreenState.Active;
                 }

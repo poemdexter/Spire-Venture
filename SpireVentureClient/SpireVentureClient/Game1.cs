@@ -24,7 +24,6 @@ namespace SpireVentureClient
         public Game1()
         {
             Content.RootDirectory = "Content";
-            this.Components.Add(new GamerServicesComponent(this));
             graphics = new GraphicsDeviceManager(this);
             ClientOptions.Instance.initialize();
             graphics.PreferredBackBufferHeight = windowHeight;
