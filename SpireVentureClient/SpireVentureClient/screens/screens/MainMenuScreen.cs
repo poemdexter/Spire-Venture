@@ -6,6 +6,7 @@ using SpireVenture.screens.framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpireVenture.util;
 
 namespace SpireVenture.screens.screens
 {
@@ -50,7 +51,10 @@ namespace SpireVenture.screens.screens
                         // start local server and join
                         break;
                     case (int)MainMenuEntry.Multiplayer:
-                        screenManager.AddScreen(new IPInputScreen(this));
+                        if (ClientOptions.Instance.Username.Equals("") || ClientOptions.Instance.Username.Equals(""))
+                            screenManager.AddScreen(new MissingNameKeyScreen(this));
+                        else
+                            screenManager.AddScreen(new IPInputScreen(this));
                         break;
                     case (int)MainMenuEntry.Options:
                         screenManager.AddScreen(new OptionsScreen(this));
