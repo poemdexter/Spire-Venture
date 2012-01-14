@@ -121,6 +121,8 @@
     <Compile Include="screens\framework\MenuEntry.cs" />
     <Compile Include="screens\screens\IPInputScreen.cs" />
     <Compile Include="screens\screens\MainMenuScreen.cs" />
+    <Compile Include="screens\screens\OptionsScreen.cs" />
+    <Compile Include="util\ClientOptions.cs" />
     <Compile Include="util\KeyboardStringBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

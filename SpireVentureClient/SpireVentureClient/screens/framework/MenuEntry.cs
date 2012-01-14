@@ -27,6 +27,7 @@ namespace SpireVenture.screens.framework
     {
         Singleplayer,
         Multiplayer,
+        Options,
         Exit
     }
 
@@ -34,5 +35,12 @@ namespace SpireVenture.screens.framework
     {
         Yes,
         No
+    }
+
+    public enum OptionsEntry
+    {
+        Username,
+        Keyword,
+        Exit
     }
 }

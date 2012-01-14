@@ -24,7 +24,7 @@ namespace SpireVenture.managers
             }
         }
 
-        public bool Connected
+        public bool Discovered
         {
             get
             {
@@ -33,7 +33,6 @@ namespace SpireVenture.managers
                 {
                     if (msg.MessageType == NetIncomingMessageType.DiscoveryResponse)
                     {
-                        client.Connect(msg.SenderEndpoint);
                         return true;
                     }
                 }

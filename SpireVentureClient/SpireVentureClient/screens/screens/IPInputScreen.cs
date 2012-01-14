@@ -15,6 +15,7 @@ namespace SpireVenture.screens.screens
     {
         NotStarted,
         Connecting,
+        Discovered,
         Connected,
         NotFound,
         Stopped
@@ -96,13 +97,17 @@ namespace SpireVenture.screens.screens
 
                 connectingElapsed = gameTime.TotalGameTime.TotalSeconds - connectingStart;
 
-                if (NetworkManager.Instance.Connected)
-                    currentConnectionStatus = ConnectionStatus.Connected;
+                if (NetworkManager.Instance.Discovered)
+                    currentConnectionStatus = ConnectionStatus.Discovered;
                 else if (connectingElapsed > timeout)
                 {
                     currentConnectionStatus = ConnectionStatus.NotFound;
                     connectingStart = 0;
                 }
+            }
+            else if (currentConnectionStatus == ConnectionStatus.Discovered)
+            {
+                // not yet "connected", send off keyword/username
             }
         }
 

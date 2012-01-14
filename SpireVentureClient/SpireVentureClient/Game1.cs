@@ -10,12 +10,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using SpireVenture.managers;
 using SpireVenture.screens.screens;
+using SpireVenture.util;
 
 namespace SpireVentureClient
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
@@ -26,7 +24,9 @@ namespace SpireVentureClient
         public Game1()
         {
             Content.RootDirectory = "Content";
+            this.Components.Add(new GamerServicesComponent(this));
             graphics = new GraphicsDeviceManager(this);
+            ClientOptions.Instance.initialize();
             graphics.PreferredBackBufferHeight = windowHeight;
             graphics.PreferredBackBufferWidth = windowWidth;
 

@@ -20,6 +20,7 @@ namespace SpireVenture.screens.screens
         {
             menuEntries.Add(new MenuEntry("Singleplayer"));
             menuEntries.Add(new MenuEntry("Multiplayer"));
+            menuEntries.Add(new MenuEntry("Options"));
             menuEntries.Add(new MenuEntry("Exit"));
             menuEntries[0].Active = true;
         }
@@ -50,6 +51,9 @@ namespace SpireVenture.screens.screens
                         break;
                     case (int)MainMenuEntry.Multiplayer:
                         screenManager.AddScreen(new IPInputScreen(this));
+                        break;
+                    case (int)MainMenuEntry.Options:
+                        screenManager.AddScreen(new OptionsScreen(this));
                         break;
                     case (int)MainMenuEntry.Exit:
                         screenManager.Game.Exit();
@@ -84,7 +88,7 @@ namespace SpireVenture.screens.screens
             int x = 0;
             foreach (MenuEntry entry in menuEntries)
             {
-                spriteBatch.DrawString(font, entry.Text, new Vector2(50, graphics.Viewport.Height - 110 + x), entry.getColor(), 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
+                spriteBatch.DrawString(font, entry.Text, new Vector2(50, graphics.Viewport.Height - 140 + x), entry.getColor(), 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
                 x += 30;
             }
 
