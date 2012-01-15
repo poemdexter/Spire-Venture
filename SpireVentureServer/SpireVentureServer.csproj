@@ -51,9 +51,9 @@
     <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SpireVentureClient\SpireVentureClient\SpireVentureClient.csproj">
-      <Project>{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}</Project>
-      <Name>SpireVentureClient</Name>
+    <ProjectReference Include="..\Util\Util.csproj">
+      <Project>{4E64653E-EA34-4A08-BEFC-AF868F629A5F}</Project>
+      <Name>Util</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

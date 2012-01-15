@@ -3,29 +3,48 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpireVentureServer", "SpireVentureServer\SpireVentureServer.csproj", "{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}"
 	ProjectSection(ProjectDependencies) = postProject
-		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0} = {F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F} = {4E64653E-EA34-4A08-BEFC-AF868F629A5F}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpireVentureClient", "SpireVentureClient\SpireVentureClient\SpireVentureClient.csproj", "{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F} = {4E64653E-EA34-4A08-BEFC-AF868F629A5F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpireVentureContent", "SpireVentureClient\SpireVentureContent\SpireVentureContent.contentproj", "{59D5803E-5ADE-4D7D-B89E-DA27831C3B16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Util\Util.csproj", "{4E64653E-EA34-4A08-BEFC-AF868F629A5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}.Debug|x86.ActiveCfg = Debug|x86
 		{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}.Debug|x86.Build.0 = Debug|x86
+		{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}.Release|Any CPU.ActiveCfg = Release|x86
 		{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}.Release|x86.ActiveCfg = Release|x86
 		{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}.Release|x86.Build.0 = Release|x86
+		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}.Debug|x86.ActiveCfg = Debug|x86
 		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}.Debug|x86.Build.0 = Debug|x86
+		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}.Release|Any CPU.ActiveCfg = Release|x86
 		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}.Release|x86.ActiveCfg = Release|x86
 		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}.Release|x86.Build.0 = Release|x86
+		{59D5803E-5ADE-4D7D-B89E-DA27831C3B16}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{59D5803E-5ADE-4D7D-B89E-DA27831C3B16}.Debug|x86.ActiveCfg = Debug|x86
+		{59D5803E-5ADE-4D7D-B89E-DA27831C3B16}.Release|Any CPU.ActiveCfg = Release|x86
 		{59D5803E-5ADE-4D7D-B89E-DA27831C3B16}.Release|x86.ActiveCfg = Release|x86
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F}.Debug|x86.ActiveCfg = Debug|x86
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F}.Debug|x86.Build.0 = Debug|x86
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F}.Release|Any CPU.ActiveCfg = Release|x86
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F}.Release|x86.ActiveCfg = Release|x86
+		{4E64653E-EA34-4A08-BEFC-AF868F629A5F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
