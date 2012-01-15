@@ -122,6 +122,7 @@
     <Compile Include="screens\screens\MainMenuScreen.cs" />
     <Compile Include="screens\screens\MissingNameKeyScreen.cs" />
     <Compile Include="screens\screens\OptionsScreen.cs" />
+    <Compile Include="screens\screens\ProfileScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

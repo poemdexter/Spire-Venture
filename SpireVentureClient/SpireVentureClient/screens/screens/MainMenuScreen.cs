@@ -48,7 +48,7 @@ namespace SpireVenture.screens.screens
                 switch (selectedEntry)
                 {
                     case (int)MainMenuEntry.Singleplayer:
-                        // start local server and join
+                        screenManager.AddScreen(new ProfileScreen(this));
                         break;
                     case (int)MainMenuEntry.Multiplayer:
                         if (ClientOptions.Instance.Username.Equals("") || ClientOptions.Instance.Username.Equals(""))

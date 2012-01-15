@@ -43,4 +43,10 @@ namespace SpireVenture.screens.framework
         Keyword,
         Exit
     }
+
+    public enum ProfileEntry
+    {
+        New,
+        Cancel
+    }
 }
