@@ -125,6 +125,7 @@
     <Compile Include="screens\screens\OptionsScreen.cs" />
     <Compile Include="util\ClientOptions.cs" />
     <Compile Include="util\KeyboardStringBuilder.cs" />
+    <Compile Include="util\PacketTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

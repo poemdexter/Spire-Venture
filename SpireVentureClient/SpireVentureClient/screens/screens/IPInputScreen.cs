@@ -107,7 +107,14 @@ namespace SpireVenture.screens.screens
             }
             else if (currentConnectionStatus == ConnectionStatus.Discovered)
             {
-                // not yet "connected", send off keyword/username
+                // time to send off username/keyword
+                UsernameKeywordComboPacket packet = new UsernameKeywordComboPacket();
+                packet.username = ClientOptions.Instance.Username;
+                packet.keyword = ClientOptions.Instance.Keyword;
+                NetworkManager.Instance.SendData(packet);
+
+                // ***temp just to stop it
+                currentConnectionStatus = ConnectionStatus.NotFound;
             }
         }
 

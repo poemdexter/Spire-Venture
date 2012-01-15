@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
+using SpireVenture.util;
 
 namespace SpireVentureServer
 {
@@ -48,9 +49,24 @@ namespace SpireVentureServer
                             break;
                         case NetIncomingMessageType.StatusChanged:
                         case NetIncomingMessageType.Data:
+                            HandlePacket(msg);
                             break;
                     }
                 }
+            }
+        }
+
+        public void HandlePacket(NetIncomingMessage msg)
+        {
+            PacketType type = (PacketType)msg.ReadByte();
+
+            switch (type)
+            {
+                case PacketType.UsernameKeywordCombo:
+                    UsernameKeywordComboPacket unkwPacket = new UsernameKeywordComboPacket();
+                    unkwPacket.Unpack(msg);
+                    Console.Write("{0}:{1}", unkwPacket.username, unkwPacket.keyword);
+                    break;
             }
         }
     }

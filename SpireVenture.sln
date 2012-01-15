@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpireVentureServer", "SpireVentureServer\SpireVentureServer.csproj", "{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0} = {F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpireVentureClient", "SpireVentureClient\SpireVentureClient\SpireVentureClient.csproj", "{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}"
 EndProject

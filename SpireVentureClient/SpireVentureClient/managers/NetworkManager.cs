@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
+using SpireVenture.util;
 
 namespace SpireVenture.managers
 {
@@ -33,6 +34,7 @@ namespace SpireVenture.managers
                 {
                     if (msg.MessageType == NetIncomingMessageType.DiscoveryResponse)
                     {
+                        client.Connect(msg.SenderEndpoint);
                         return true;
                     }
                 }
@@ -52,6 +54,13 @@ namespace SpireVenture.managers
         {
             client.Start();
             client.DiscoverKnownPeer(ip, 9007);
+        }
+
+        public void SendData(iPacket packet)
+        {
+            NetOutgoingMessage sendMsg = client.CreateMessage();
+            sendMsg = packet.Pack(sendMsg);
+            client.SendMessage(sendMsg, NetDeliveryMethod.Unreliable);
         }
     }
 }
