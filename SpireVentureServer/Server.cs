@@ -70,7 +70,7 @@ namespace SpireVentureServer
                     UsernameKeywordComboPacket unkwPacket = new UsernameKeywordComboPacket();
                     unkwPacket.Unpack(msg);
 
-                    if (isLocalGame && unkwPacket.keyword.Equals("local")
+                    if (isLocalGame && unkwPacket.keyword.Equals("local"))
                     {
                         // TODO: singleplayer so we need to get file from my documents
                         //http://www.java2s.com/Code/CSharp/File-Stream/CSerialization.htm

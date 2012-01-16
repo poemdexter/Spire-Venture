@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpireVenture.util;
+using Util.util;
 
 namespace SpireVenture.screens.screens
 {
@@ -52,7 +53,7 @@ namespace SpireVenture.screens.screens
                         break;
                     case (int)MainMenuEntry.Multiplayer:
                         if (ClientOptions.Instance.Username.Equals("") || ClientOptions.Instance.Username.Equals(""))
-                            screenManager.AddScreen(new MissingNameKeyScreen(this));
+                            screenManager.AddScreen(new PopUpWarningScreen(this, StringConstants.MissingUserKeyCombo));
                         else
                             screenManager.AddScreen(new IPInputScreen(this));
                         break;

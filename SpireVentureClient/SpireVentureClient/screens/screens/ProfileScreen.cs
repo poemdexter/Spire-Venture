@@ -140,9 +140,9 @@ namespace SpireVenture.screens.screens
                                 string newProfileName = keyboardInput.ToString();
                                 if (profileFiles != null && profileFiles.Length > 0)
                                 {
-                                    if (profileFiles.Contains(newProfileName + ".sav"))
+                                    if (doesProfileExist(newProfileName))
                                     {
-                                        //TODO: throw warning of duplicate
+                                        screenManager.AddScreen(new PopUpWarningScreen(this, StringConstants.DuplicateProfile));
                                     }
                                     else
                                     {
@@ -263,6 +263,19 @@ namespace SpireVenture.screens.screens
                 spriteBatch.DrawString(font, newtxt, new Vector2(150, graphics.Viewport.Height - 20 - (30 * (menuEntries.Count + (int)ProfileEntry.New))), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
             }
             spriteBatch.End();
+        }
+
+        private bool doesProfileExist(string profileName)
+        {
+            if (profileFiles.Length > 0)
+            {
+                foreach (string filename in profileFiles)
+                {
+                    if (profileName.Equals(Path.GetFileNameWithoutExtension(filename)))
+                        return true;
+                }
+            }
+            return false;
         }
 
         private void findProfiles()
