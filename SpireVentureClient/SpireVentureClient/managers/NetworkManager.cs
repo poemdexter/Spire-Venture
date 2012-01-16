@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using SpireVenture.util;
+using SpireVentureServer;
+using System.Threading;
 
 namespace SpireVenture.managers
 {
@@ -11,6 +13,7 @@ namespace SpireVenture.managers
     {
         private static NetworkManager instance;
         private NetClient client;
+        private Server server;
 
         // i'm a singleton!
         public static NetworkManager Instance
@@ -61,6 +64,29 @@ namespace SpireVenture.managers
             NetOutgoingMessage sendMsg = client.CreateMessage();
             sendMsg = packet.Pack(sendMsg);
             client.SendMessage(sendMsg, NetDeliveryMethod.Unreliable);
+        }
+
+        public void SingleplayerStart()
+        {
+            // start Server
+            server = new Server(true);
+            ThreadStart serverStart = new ThreadStart(server.Start);
+            Thread serverThread = new Thread(serverStart);
+            serverThread.Name = "SpireVenture Singleplayer Server";
+            serverThread.Start();
+            
+            // connect Client
+            this.Start("localhost");
+
+            // supery hackery way of waiting for discovery locally
+            while (!this.Discovered) ;
+
+            // we're connected to our local server now
+        }
+
+        public void StopSingleplayerServer()
+        {
+            server.Stop();
         }
     }
 }

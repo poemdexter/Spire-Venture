@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using SpireVenture.util;
 using SpireVenture.managers;
+using System.Threading;
 
 namespace SpireVenture.screens.screens
 {
@@ -111,10 +112,14 @@ namespace SpireVenture.screens.screens
                 UsernameKeywordComboPacket packet = new UsernameKeywordComboPacket();
                 packet.username = ClientOptions.Instance.Username;
                 packet.keyword = ClientOptions.Instance.Keyword;
+                Thread.Sleep(1000);
                 NetworkManager.Instance.SendData(packet);
 
                 // ***temp just to stop it
                 currentConnectionStatus = ConnectionStatus.NotFound;
+                // ***temp just to stop it
+
+                //TODO get Server data for multiplayer so we can start game
             }
         }
 

@@ -7,13 +7,15 @@ using SpireVenture.util;
 
 namespace SpireVentureServer
 {
-    class Server
+    public class Server
     {
         private NetServer server;
-        private bool running = false;
+        private volatile bool running = false;
+        private bool isLocalGame = false;
 
-        public Server()
+        public Server(bool local)
         {
+            isLocalGame = local;
             NetPeerConfiguration config = new NetPeerConfiguration("SpireServer");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.NetworkThreadName = "Spire Server";
@@ -54,6 +56,8 @@ namespace SpireVentureServer
                     }
                 }
             }
+            Console.Write("Stopping Server...");
+            this.server.Shutdown("");
         }
 
         public void HandlePacket(NetIncomingMessage msg)
@@ -65,6 +69,18 @@ namespace SpireVentureServer
                 case PacketType.UsernameKeywordCombo:
                     UsernameKeywordComboPacket unkwPacket = new UsernameKeywordComboPacket();
                     unkwPacket.Unpack(msg);
+
+                    if (isLocalGame && unkwPacket.keyword.Equals("local")
+                    {
+                        // TODO: singleplayer so we need to get file from my documents
+                        //http://www.java2s.com/Code/CSharp/File-Stream/CSerialization.htm
+                    }
+                    else 
+                    {
+                        // TODO: multiplayer so we need to get file from local storage
+                        //http://www.java2s.com/Code/CSharp/File-Stream/CSerialization.htm
+                    }
+
                     Console.Write("{0}:{1}", unkwPacket.username, unkwPacket.keyword);
                     break;
             }

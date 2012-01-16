@@ -7,6 +7,11 @@ using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpireVenture.util;
+using Util.util;
+using System.Runtime.Serialization.Formatters.Binary;
+using SpireVenture.managers;
+using System.Threading;
 
 namespace SpireVenture.screens.screens
 {
@@ -19,15 +24,15 @@ namespace SpireVenture.screens.screens
         int selectedProfileEntry = -1;
         private const string titleText = "Profiles";
         bool onProfiles = false, onMenu = false;
+        private bool newProfileActive = false;
+        private StringBuilder keyboardInput;
+        private KeyboardStringBuilder profileStringBuilder;
+        private string[] profileFiles;
 
         public ProfileScreen(GameScreen parentScreen)
         {
-            //usernamekeyboardInput = new StringBuilder();
-            //keywordkeyboardInput = new StringBuilder();
-            //usernameStringBuilder = new KeyboardStringBuilder();
-            //keywordStringBuilder = new KeyboardStringBuilder();
-
-            //loadSavedOptions();
+            keyboardInput = new StringBuilder();
+            profileStringBuilder = new KeyboardStringBuilder();
 
             ParentScreen = parentScreen;
             ParentScreen.currentScreenState = ScreenState.Hidden;
@@ -129,7 +134,37 @@ namespace SpireVenture.screens.screens
                     switch (selectedMenuEntry)
                     {
                         case (int)ProfileEntry.New:
-                            // create new profile
+                            if (newProfileActive)
+                            {
+                                // done typing (save it)
+                                string newProfileName = keyboardInput.ToString();
+                                if (profileFiles != null && profileFiles.Length > 0)
+                                {
+                                    if (profileFiles.Contains(newProfileName + ".sav"))
+                                    {
+                                        //TODO: throw warning of duplicate
+                                    }
+                                    else
+                                    {
+                                        profileFiles.Concat(new string[] { newProfileName });
+                                        createNewProfile(newProfileName);
+                                        profileEntries.Add(new MenuEntry(newProfileName));
+                                    }
+                                }
+                                else
+                                {
+                                    profileFiles = new string[] { newProfileName };
+                                    createNewProfile(newProfileName);
+                                    profileEntries.Add(new MenuEntry(newProfileName));
+                                }
+                                keyboardInput.Clear();
+                                newProfileActive = false;
+                            }
+                            else if (!newProfileActive)
+                            {
+                                // start taking keystrokes
+                                newProfileActive = true;
+                            }
                             break;
                         case (int)ProfileEntry.Cancel:
                             screenManager.RemoveScreen(this);
@@ -139,11 +174,29 @@ namespace SpireVenture.screens.screens
                 }
                 else if (onProfiles)
                 {
-                    // load selected profile *START GAME OH GOD*
+                    NetworkManager.Instance.SingleplayerStart();
+
+                    // time to send off profile name and "local" keyword
+                    UsernameKeywordComboPacket packet = new UsernameKeywordComboPacket();
+                    packet.username = Path.GetFileNameWithoutExtension(profileFiles[selectedProfileEntry]);
+                    packet.keyword = "local";
+                    Thread.Sleep(1000);
+                    NetworkManager.Instance.SendData(packet);
+
+                    // ***temp just to stop it
+                    // NetworkManager.Instance.StopSingleplayerServer();
+                    // ***temp just to stop it
+
+                    //TODO get Server data for singleplayer so we can start game
                 }
             }
             if (input.IsNewKeyPress(Keys.Escape))
             {
+                if (newProfileActive)
+                {
+                    keyboardInput.Clear();
+                    newProfileActive = false;
+                }
                 screenManager.RemoveScreen(this);
                 ParentScreen.currentScreenState = ScreenState.Active;
             }
@@ -163,6 +216,11 @@ namespace SpireVenture.screens.screens
                 {
                     profileEntries[j].Active = (j == selectedProfileEntry) ? true : false;
                 }
+            }
+
+            if (newProfileActive)
+            {
+                profileStringBuilder.Process(Keyboard.GetState(), gameTime, keyboardInput);
             }
         }
 
@@ -199,6 +257,11 @@ namespace SpireVenture.screens.screens
                 x += 30;
             }
 
+            if (newProfileActive)
+            {
+                String newtxt = keyboardInput.ToString() + "_";
+                spriteBatch.DrawString(font, newtxt, new Vector2(150, graphics.Viewport.Height - 20 - (30 * (menuEntries.Count + (int)ProfileEntry.New))), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
+            }
             spriteBatch.End();
         }
 
@@ -207,7 +270,7 @@ namespace SpireVenture.screens.screens
             String documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             String clientPath = Path.Combine(documentsPath, "SpireVenture");
 
-            string[] profileFiles = Directory.GetFiles(clientPath, "*.sav");
+            profileFiles = Directory.GetFiles(clientPath, "*.sav");
 
             if (profileFiles.Length > 0)
             {
@@ -216,6 +279,23 @@ namespace SpireVenture.screens.screens
                     profileEntries.Add(new MenuEntry(Path.GetFileNameWithoutExtension(filename)));
                 }
             }
+        }
+
+        private void createNewProfile(string name)
+        {
+            String documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            String clientPath = Path.Combine(documentsPath, "SpireVenture");
+            String profileFilePath = Path.Combine(clientPath, name + ".sav");
+
+            if (!Directory.Exists(clientPath))
+                Directory.CreateDirectory(clientPath);
+
+            PlayerSave save = new PlayerSave(name);
+
+            Stream streamWrite = File.Create(profileFilePath);
+            BinaryFormatter binaryWrite = new BinaryFormatter();
+            binaryWrite.Serialize(streamWrite, save);
+            streamWrite.Close();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace SpireVentureServer
         static void Main(string[] args)
         {
             Console.WriteLine("-= Spire Server 0.1 =-");
-            Server server = new Server();
+            Server server = new Server(false);
             server.Start();
         }
     }

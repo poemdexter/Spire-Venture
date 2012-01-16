@@ -9,6 +9,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpireVentureClient", "SpireVentureClient\SpireVentureClient\SpireVentureClient.csproj", "{F5DFB6B5-01FA-4300-B4AA-4A1F0CAAC7F0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4E64653E-EA34-4A08-BEFC-AF868F629A5F} = {4E64653E-EA34-4A08-BEFC-AF868F629A5F}
+		{35527EA7-5CBD-4AEC-9DF1-64526C599DD6} = {35527EA7-5CBD-4AEC-9DF1-64526C599DD6}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpireVentureContent", "SpireVentureClient\SpireVentureContent\SpireVentureContent.contentproj", "{59D5803E-5ADE-4D7D-B89E-DA27831C3B16}"
