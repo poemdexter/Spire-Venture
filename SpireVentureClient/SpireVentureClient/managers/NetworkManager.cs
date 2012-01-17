@@ -70,8 +70,7 @@ namespace SpireVenture.managers
         {
             // start Server
             server = new Server(true);
-            ThreadStart serverStart = new ThreadStart(server.Start);
-            Thread serverThread = new Thread(serverStart);
+            Thread serverThread = new Thread(new ThreadStart(server.Start));
             serverThread.Name = "SpireVenture Singleplayer Server";
             serverThread.Start();
             

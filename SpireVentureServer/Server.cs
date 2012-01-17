@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using SpireVenture.util;
+using SpireVentureServer.managers;
+using System.Threading;
 
 namespace SpireVentureServer
 {
@@ -13,6 +15,8 @@ namespace SpireVentureServer
         private volatile bool running = false;
         private bool isLocalGame = false;
 
+        private GameStateManager gameManager;
+
         public Server(bool local)
         {
             isLocalGame = local;
@@ -21,6 +25,7 @@ namespace SpireVentureServer
             config.NetworkThreadName = "Spire Server";
             config.Port = 9007;
             server = new NetServer(config);
+            gameManager = new GameStateManager();
         }
 
         public void Stop()
@@ -31,6 +36,11 @@ namespace SpireVentureServer
         public void Start()
         {
             this.server.Start();
+
+            Thread thread = new Thread(new ThreadStart(gameManager.Start));
+            thread.Name = "GameStateManager";
+            thread.Start();
+
             this.running = true;
             while (running)
             {
@@ -77,6 +87,7 @@ namespace SpireVentureServer
                     }
                     else 
                     {
+                        // TODO: make sure client isn't logging in twice on same toon
                         // TODO: multiplayer so we need to get file from local storage
                         //http://www.java2s.com/Code/CSharp/File-Stream/CSerialization.htm
                     }
