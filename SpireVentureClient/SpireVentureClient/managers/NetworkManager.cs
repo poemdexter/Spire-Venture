@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
-using SpireVenture.util;
 using SpireVentureServer;
 using System.Threading;
+using Util.util;
 
 namespace SpireVenture.managers
 {
@@ -85,6 +85,7 @@ namespace SpireVenture.managers
 
         public void StopSingleplayerServer()
         {
+            client.Disconnect("");
             server.Stop();
         }
     }

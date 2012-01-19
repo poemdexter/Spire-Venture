@@ -7,11 +7,10 @@ using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpireVenture.util;
-using Util.util;
 using System.Runtime.Serialization.Formatters.Binary;
 using SpireVenture.managers;
 using System.Threading;
+using Util.util;
 
 namespace SpireVenture.screens.screens
 {
@@ -37,7 +36,8 @@ namespace SpireVenture.screens.screens
             ParentScreen = parentScreen;
             ParentScreen.currentScreenState = ScreenState.Hidden;
 
-            findProfiles();
+            profileFiles = FileGrabber.findLocalProfiles();
+            createProfilesMenuEntries(profileFiles);
             menuEntries.Add(new MenuEntry("New"));
             menuEntries.Add(new MenuEntry("Cancel"));
 
@@ -147,14 +147,14 @@ namespace SpireVenture.screens.screens
                                     else
                                     {
                                         profileFiles.Concat(new string[] { newProfileName });
-                                        createNewProfile(newProfileName);
+                                        FileGrabber.createNewProfile(newProfileName);
                                         profileEntries.Add(new MenuEntry(newProfileName));
                                     }
                                 }
                                 else
                                 {
                                     profileFiles = new string[] { newProfileName };
-                                    createNewProfile(newProfileName);
+                                    FileGrabber.createNewProfile(newProfileName);
                                     profileEntries.Add(new MenuEntry(newProfileName));
                                 }
                                 keyboardInput.Clear();
@@ -278,13 +278,8 @@ namespace SpireVenture.screens.screens
             return false;
         }
 
-        private void findProfiles()
+        private void createProfilesMenuEntries(string[] profileFiles)
         {
-            String documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            String clientPath = Path.Combine(documentsPath, "SpireVenture");
-
-            profileFiles = Directory.GetFiles(clientPath, "*.sav");
-
             if (profileFiles.Length > 0)
             {
                 foreach (string filename in profileFiles)
@@ -292,23 +287,6 @@ namespace SpireVenture.screens.screens
                     profileEntries.Add(new MenuEntry(Path.GetFileNameWithoutExtension(filename)));
                 }
             }
-        }
-
-        private void createNewProfile(string name)
-        {
-            String documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            String clientPath = Path.Combine(documentsPath, "SpireVenture");
-            String profileFilePath = Path.Combine(clientPath, name + ".sav");
-
-            if (!Directory.Exists(clientPath))
-                Directory.CreateDirectory(clientPath);
-
-            PlayerSave save = new PlayerSave(name);
-
-            Stream streamWrite = File.Create(profileFilePath);
-            BinaryFormatter binaryWrite = new BinaryFormatter();
-            binaryWrite.Serialize(streamWrite, save);
-            streamWrite.Close();
         }
     }
 }

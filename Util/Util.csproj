@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="util\FileGrabber.cs" />
     <Compile Include="util\ClientOptions.cs" />
     <Compile Include="util\KeyboardStringBuilder.cs" />
     <Compile Include="util\PacketTypes.cs" />

@@ -10,8 +10,8 @@ namespace SpireVentureServer.managers
 {
     class GameStateManager
     {
-        Dictionary<string, PlayerSave> PlayerSaves;
-        BiDictionary EndpointUsernames;
+        public Dictionary<string, PlayerSave> PlayerSaves;
+        public BiDictionary EndpointUsernames;
 
         private bool running = false;
         double now = 0;
@@ -43,6 +43,13 @@ namespace SpireVentureServer.managers
         {
             // one tick of gametime
             // TODO: add game!
+        }
+
+        public void HandleDisconnect(bool isLocalGame, string username)
+        {
+            FileGrabber.SavePlayer(isLocalGame, PlayerSaves[username]);
+            PlayerSaves.Remove(username);
+            EndpointUsernames.Remove(username);
         }
     }
 }

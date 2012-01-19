@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 
-namespace SpireVenture.util
+namespace Util.util
 {
     public interface iPacket
     {

@@ -6,9 +6,9 @@ using SpireVenture.screens.framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-using SpireVenture.util;
 using SpireVenture.managers;
 using System.Threading;
+using Util.util;
 
 namespace SpireVenture.screens.screens
 {

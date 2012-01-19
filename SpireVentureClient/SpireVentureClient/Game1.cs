@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using SpireVenture.managers;
 using SpireVenture.screens.screens;
-using SpireVenture.util;
+using Util.util;
 
 namespace SpireVentureClient
 {

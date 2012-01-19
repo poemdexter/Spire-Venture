@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 
-namespace SpireVenture.util
+namespace Util.util
 {
     public class KeyboardStringBuilder
     {

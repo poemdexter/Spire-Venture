@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Storage;
 using System.IO;
 
-namespace SpireVenture.util
+namespace Util.util
 {
     public class ClientOptions
     {
