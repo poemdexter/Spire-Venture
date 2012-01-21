@@ -15,15 +15,17 @@ namespace SpireVenture.managers
         List<GameScreen> screensToUpdate = new List<GameScreen>();
         InputState input = new InputState();
         bool isInitialized;
+        public GraphicsDeviceManager Graphics {get; set;}
 
         // shared amongst screen components
         public SpriteBatch SpriteBatch { get; set; }
         public SpriteFont Font { get; set; }
 
         // constructor
-        public ScreenManager(Game game)
+        public ScreenManager(Game game, GraphicsDeviceManager graphics)
             : base(game)
         {
+            Graphics = graphics;
         }
 
         public override void Initialize()

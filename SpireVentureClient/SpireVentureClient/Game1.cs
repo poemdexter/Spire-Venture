@@ -17,19 +17,41 @@ namespace SpireVentureClient
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        private int windowHeight = 720;
-        private int windowWidth = 720;
         ScreenManager screenManager;
 
+        int windowWidth, windowHeight;
+
+        public void hey() { }
         public Game1()
         {
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
-            ClientOptions.Instance.initialize();
-            graphics.PreferredBackBufferHeight = windowHeight;
-            graphics.PreferredBackBufferWidth = windowWidth;
 
-            screenManager = new ScreenManager(this);
+            // TODO: Fix so that we set option correctly
+            ClientOptions.Instance.initialize();
+            int h = ClientOptions.Instance.ResolutionHeight;
+            int w = ClientOptions.Instance.ResolutionWidth;
+            bool full = ClientOptions.Instance.Fullscreen;
+
+            if (h > 0 && w > 0)
+            {
+                windowWidth = w;
+                windowHeight = h;
+                graphics.IsFullScreen = false;
+            }
+            else
+            {
+                windowWidth = 800;
+                windowHeight = 600;
+                graphics.IsFullScreen = false;
+            }
+
+            graphics.PreferredBackBufferWidth = windowWidth;
+            graphics.PreferredBackBufferHeight = windowHeight;
+            graphics.IsFullScreen = full;
+            
+
+            screenManager = new ScreenManager(this, graphics);
 
             Components.Add(screenManager);
 

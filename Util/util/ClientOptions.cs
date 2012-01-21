@@ -9,9 +9,12 @@ namespace Util.util
 {
     public class ClientOptions
     {
-        public String Username { get; private set; }
+        public String Username{ get; private set; }
         public String Keyword { get; private set; }
         public String HashedCombo { get; private set; }
+        public int ResolutionHeight { get; private set; }
+        public int ResolutionWidth { get; private set; }
+        public bool Fullscreen { get; private set; }
         Dictionary<string, string> optionsDict;
         private bool changed = false;
         private static ClientOptions instance;
@@ -74,6 +77,15 @@ namespace Util.util
                         case "keyword":
                             Keyword = optionsDict["keyword"];
                             break;
+                        case "resolutionH":
+                            ResolutionHeight = Convert.ToInt32(optionsDict["resolutionH"]);
+                            break;
+                        case "resolutionW":
+                            ResolutionWidth = Convert.ToInt32(optionsDict["resolutionW"]);
+                            break;
+                        case "fullscreen":
+                            Fullscreen = Convert.ToBoolean(optionsDict["fullscreen"]);
+                            break;
                     }
                 }
             }
@@ -112,13 +124,9 @@ namespace Util.util
             changed = true;
             Keyword = word;
             if (optionsDict.ContainsKey("keyword"))
-            {
                 optionsDict["keyword"] = word;
-            }
             else
-            {
                 optionsDict.Add("keyword", word);
-            }
         }
 
         public void setUsername(String word)
@@ -126,13 +134,34 @@ namespace Util.util
             changed = true;
             Username = word;
             if (optionsDict.ContainsKey("username"))
-            {
                 optionsDict["username"] = word;
-            }
-            else 
-            {
+            else
                 optionsDict.Add("username", word);
-            }
+        }
+
+        public void setResolution(int H, int W)
+        {
+            changed = true;
+            ResolutionHeight = H;
+            ResolutionWidth = W;
+            if (optionsDict.ContainsKey("resolutionH"))
+                optionsDict["resolutionH"] = Convert.ToString(H);
+            else
+                optionsDict.Add("resolutionH", Convert.ToString(H));
+            if (optionsDict.ContainsKey("resolutionW"))
+                optionsDict["resolutionW"] = Convert.ToString(W);
+            else
+                optionsDict.Add("resolutionW", Convert.ToString(W));
+        }
+
+        public void setFullscreen(bool full)
+        {
+            changed = true;
+            Fullscreen = full;
+            if (optionsDict.ContainsKey("fullscreen"))
+                optionsDict["fullscreen"] = Convert.ToString(full);
+            else
+                optionsDict.Add("fullscreen", Convert.ToString(full));
         }
     }
 }

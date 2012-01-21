@@ -41,6 +41,8 @@ namespace SpireVenture.screens.framework
     {
         Username,
         Keyword,
+        Resolution,
+        Fullscreen,
         Exit
     }
 
