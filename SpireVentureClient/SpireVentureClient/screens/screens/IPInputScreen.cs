@@ -19,7 +19,8 @@ namespace SpireVenture.screens.screens
         Discovered,
         Connected,
         NotFound,
-        Stopped
+        Stopped,
+        FailVerify
     }
 
     class IPInputScreen : GameScreen
@@ -29,6 +30,7 @@ namespace SpireVenture.screens.screens
         private KeyboardStringBuilder keyboardStringBuilder;
         private GameScreen ParentScreen;
         Texture2D backgroundTexture;
+        private string failmessage = "";
 
         // connection vars
         private double connectingStart = 0;
@@ -73,6 +75,11 @@ namespace SpireVenture.screens.screens
                         currentConnectionStatus = ConnectionStatus.Stopped;
                     }
                 }
+                else if (currentConnectionStatus == ConnectionStatus.FailVerify)
+                {
+                    currentConnectionStatus = ConnectionStatus.NotStarted;
+                    failmessage = "";
+                }
                 else
                 {
                     screenManager.RemoveScreen(this);
@@ -100,13 +107,17 @@ namespace SpireVenture.screens.screens
 
                 if (NetworkManager.Instance.Discovered)
                     currentConnectionStatus = ConnectionStatus.Discovered;
+
+                    // *** we're connected to our network server now
+
                 else if (connectingElapsed > timeout)
                 {
                     currentConnectionStatus = ConnectionStatus.NotFound;
                     connectingStart = 0;
                 }
             }
-            else if (currentConnectionStatus == ConnectionStatus.Discovered)
+
+            if (currentConnectionStatus == ConnectionStatus.Discovered)
             {
                 // time to send off username/keyword
                 UsernameKeywordComboPacket packet = new UsernameKeywordComboPacket();
@@ -115,11 +126,27 @@ namespace SpireVenture.screens.screens
                 Thread.Sleep(1000);
                 NetworkManager.Instance.SendData(packet);
 
-                // ***temp just to stop it
-                currentConnectionStatus = ConnectionStatus.NotFound;
-                // ***temp just to stop it
+                string verification = NetworkManager.Instance.Verified;
+                if (!verification.Equals(""))
+                {
+                      if (verification.Equals("verified"))
+                        currentConnectionStatus = ConnectionStatus.Connected;
+                      else
+                      {
+                          currentConnectionStatus = ConnectionStatus.FailVerify;
+                          failmessage = verification;
+                          Console.WriteLine(verification);
+                      }
+                }
+            }
 
-                //TODO get Server data for multiplayer so we can start game
+            if (currentConnectionStatus == ConnectionStatus.Connected)
+            {
+                //TODO D: get Server data for multiplayer so we can start game (before screens)
+
+                screenManager.AddScreen(new MainGameScreen());
+                screenManager.RemoveScreen(this);
+                screenManager.RemoveScreen(this.ParentScreen);
             }
         }
 
@@ -132,34 +159,37 @@ namespace SpireVenture.screens.screens
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null);
 
             // draw background
-            float scale = 4f;
+            float scale = 2f;
             int midscreen = graphics.Viewport.Height / 2;
             String message;
 
-            spriteBatch.Draw(backgroundTexture, new Vector2(graphics.Viewport.Width / 2, midscreen), backgroundTexture.Bounds, Color.White, 0f, new Vector2(backgroundTexture.Width / 2, backgroundTexture.Height / 2), scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(backgroundTexture, new Vector2(graphics.Viewport.Width / 2, midscreen), backgroundTexture.Bounds, Color.White, 0f, new Vector2(backgroundTexture.Width / 2, backgroundTexture.Height / 2), 4f, SpriteEffects.None, 0f);
             switch (currentConnectionStatus)
             {
                 case (ConnectionStatus.NotStarted):
                     // draw title
-                    spriteBatch.DrawString(font, titleText, new Vector2(graphics.Viewport.Width / 2, midscreen - 15), Color.White, 0, font.MeasureString(titleText) / 2, 4f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, titleText, new Vector2(graphics.Viewport.Width / 2, midscreen - 15), Color.White, 0, font.MeasureString(titleText) / 2, scale, SpriteEffects.None, 0);
                     // draw current ip as typed
-                    spriteBatch.DrawString(font, keyboardInput, new Vector2(graphics.Viewport.Width / 2, midscreen + 30), Color.White, 0, font.MeasureString(keyboardInput) / 2, 4f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, keyboardInput, new Vector2(graphics.Viewport.Width / 2, midscreen + 30), Color.White, 0, font.MeasureString(keyboardInput) / 2, scale, SpriteEffects.None, 0);
                     break;
                 case (ConnectionStatus.Connecting):
                     message = "Connecting...";
-                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, 4f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, scale, SpriteEffects.None, 0);
                     break;
                 case (ConnectionStatus.Connected):
                     message = "Connected!";
-                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, 4f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, scale, SpriteEffects.None, 0);
                     break;
                 case (ConnectionStatus.NotFound):
                     message = "Server not found.";
-                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, 4f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, scale, SpriteEffects.None, 0);
                     break;
                 case (ConnectionStatus.Stopped):
                     message = "Connection cancelled.";
-                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, 4f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, scale, SpriteEffects.None, 0);
+                    break;
+                case (ConnectionStatus.FailVerify):
+                    spriteBatch.DrawString(font, failmessage, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(failmessage) / 2, scale, SpriteEffects.None, 0);
                     break;
 
             }

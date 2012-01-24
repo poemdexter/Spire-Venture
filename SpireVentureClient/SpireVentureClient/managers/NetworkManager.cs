@@ -45,6 +45,28 @@ namespace SpireVenture.managers
             }
         }
 
+        public string Verified
+        {
+            get
+            {
+                NetIncomingMessage msg;
+                while ((msg = client.ReadMessage()) != null)
+                {
+                    if (msg.MessageType == NetIncomingMessageType.UnconnectedData)
+                    {
+                        PacketType type = (PacketType)msg.ReadByte();
+                        if (type == PacketType.LoginVerification)
+                        {
+                            LoginVerificationPacket packet = new LoginVerificationPacket();
+                            packet.Unpack(msg);
+                            return packet.message;
+                        }
+                    }
+                }
+                return "";
+            }
+        }
+
         private NetworkManager()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("SpireServer");
@@ -80,13 +102,32 @@ namespace SpireVenture.managers
             // supery hackery way of waiting for discovery locally
             while (!this.Discovered) ;
 
-            // we're connected to our local server now
+            // *** we're connected to our local server now
         }
 
         public void StopSingleplayerServer()
         {
             client.Disconnect("");
             server.Stop();
+        }
+
+        public void CheckForNewMessages()
+        {
+            NetIncomingMessage msg;
+            while ((msg = client.ReadMessage()) != null)
+            {
+                switch (msg.MessageType)
+                {
+                    case NetIncomingMessageType.Data:
+                        HandleMessage(msg);
+                        break;
+                }
+            }
+        }
+
+        private void HandleMessage(NetIncomingMessage msg)
+        {
+            
         }
     }
 }

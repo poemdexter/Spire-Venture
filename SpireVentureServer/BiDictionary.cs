@@ -8,48 +8,48 @@ namespace SpireVentureServer
 {
     class BiDictionary
     {
-        Dictionary<IPEndPoint, string> IPtoPlayerDict;
-        Dictionary<string, IPEndPoint> PlayertoIPDict;
+        Dictionary<long, string> RUIDtoPlayerDict;
+        Dictionary<string, long> PlayertoRUIDDict;
 
         public BiDictionary()
         {
-            IPtoPlayerDict = new Dictionary<IPEndPoint, string>();
-            PlayertoIPDict = new Dictionary<string, IPEndPoint>();
+            RUIDtoPlayerDict = new Dictionary<long, string>();
+            PlayertoRUIDDict = new Dictionary<string, long>();
         }
 
-        public void Add(string username, IPEndPoint endPoint)
+        public void Add(string username, long RUID)
         {
-            IPtoPlayerDict.Add(endPoint, username);
-            PlayertoIPDict.Add(username, endPoint);
+            RUIDtoPlayerDict.Add(RUID, username);
+            PlayertoRUIDDict.Add(username, RUID);
         }
 
         public void Remove(string username)
         {
-            IPEndPoint endPoint = PlayertoIPDict[username];
-            IPtoPlayerDict.Remove(endPoint);
-            PlayertoIPDict.Remove(username);
+            long RUID = PlayertoRUIDDict[username];
+            RUIDtoPlayerDict.Remove(RUID);
+            PlayertoRUIDDict.Remove(username);
         }
 
-        public void Remove(IPEndPoint endPoint)
+        public void Remove(long RUID)
         {
-            string username = IPtoPlayerDict[endPoint];
-            IPtoPlayerDict.Remove(endPoint);
-            PlayertoIPDict.Remove(username);
+            string username = RUIDtoPlayerDict[RUID];
+            RUIDtoPlayerDict.Remove(RUID);
+            PlayertoRUIDDict.Remove(username);
         }
 
-        public IPEndPoint GetValue(string usernameKey)
+        public long GetValue(string usernameKey)
         {
-            return PlayertoIPDict[usernameKey];
+            return PlayertoRUIDDict[usernameKey];
         }
 
-        public string GetValue(IPEndPoint endPointKey)
+        public string GetValue(long endPointKey)
         {
-            return IPtoPlayerDict[endPointKey];
+            return RUIDtoPlayerDict[endPointKey];
         }
 
         public bool UserExists(string username)
         {
-            return PlayertoIPDict.ContainsKey(username);
+            return PlayertoRUIDDict.ContainsKey(username);
         }
     }
 }

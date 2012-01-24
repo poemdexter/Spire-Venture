@@ -27,7 +27,6 @@ namespace SpireVentureClient
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
 
-            // TODO: Fix so that we set option correctly
             ClientOptions.Instance.initialize();
             int h = ClientOptions.Instance.ResolutionHeight;
             int w = ClientOptions.Instance.ResolutionWidth;

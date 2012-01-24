@@ -183,11 +183,13 @@ namespace SpireVenture.screens.screens
                     Thread.Sleep(1000);
                     NetworkManager.Instance.SendData(packet);
 
-                    // ***temp just to stop it
-                    // NetworkManager.Instance.StopSingleplayerServer();
-                    // ***temp just to stop it
+                    // stupid thing so we can stay at the same handshake process as multiplayer
+                    while (NetworkManager.Instance.Verified.Equals("")) {}
 
-                    //TODO get Server data for singleplayer so we can start game
+                    //TODO D: get Server data for singleplayer so we can start game (before screens)
+                    
+                    screenManager.AddScreen(new MainGameScreen());
+                    screenManager.RemoveScreen(this);
                 }
             }
             if (input.IsNewKeyPress(Keys.Escape))

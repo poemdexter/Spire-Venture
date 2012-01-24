@@ -118,6 +118,7 @@
     <Compile Include="screens\framework\GameScreen.cs" />
     <Compile Include="screens\framework\InputState.cs" />
     <Compile Include="screens\framework\MenuEntry.cs" />
+    <Compile Include="screens\screens\MainGameScreen.cs" />
     <Compile Include="screens\screens\IPInputScreen.cs" />
     <Compile Include="screens\screens\MainMenuScreen.cs" />
     <Compile Include="screens\screens\PopUpWarningScreen.cs" />

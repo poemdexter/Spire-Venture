@@ -6,6 +6,7 @@ using Lidgren.Network;
 using SpireVentureServer.managers;
 using System.Threading;
 using Util.util;
+using System.Net;
 
 namespace SpireVentureServer
 {
@@ -14,6 +15,10 @@ namespace SpireVentureServer
         private NetServer server;
         private volatile bool running = false;
         private bool isLocalGame = false;
+
+        double now = 0;
+        double nextUpdate = NetTime.Now;
+        private double ticksPerSecond = 20.0;
 
         private GameStateManager gameManager;
 
@@ -44,6 +49,7 @@ namespace SpireVentureServer
             this.running = true;
             while (running)
             {
+                // HANDLE INCOMING
                 NetIncomingMessage msg;
                 while ((msg = server.ReadMessage()) != null)
                 {
@@ -74,12 +80,12 @@ namespace SpireVentureServer
                                     ServerMessage("disconnecting");
                                     break;
                                 case NetConnectionStatus.Disconnected:
-                                    string user = gameManager.EndpointUsernames.GetValue(msg.SenderEndpoint);
+                                    string user = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
                                     ServerMessage(user + " disconnected");
                                     gameManager.HandleDisconnect(isLocalGame, user);
                                     if (!isLocalGame)
                                     {
-                                        // TODO: Tell everyone on server that someone disconnected 
+                                        // TODO F: tell everyone on server that someone disconnected 
                                     }
                                     else this.Stop();
                                     break;
@@ -95,6 +101,16 @@ namespace SpireVentureServer
                             break;
                     }
                 }
+
+                // HANDLE OUTGOING
+                now = NetTime.Now;
+                if (now > nextUpdate)
+                {
+                    // TODO A: add sending
+                    nextUpdate += (1.0 / ticksPerSecond);
+                }
+
+                Thread.Sleep(1);
             }
             ServerMessage("Stopping Server...");
             this.server.Shutdown("");
@@ -103,7 +119,6 @@ namespace SpireVentureServer
         private void HandlePacket(NetIncomingMessage msg)
         {
             PacketType type = (PacketType)msg.ReadByte();
-
             switch (type)
             {
                 case PacketType.UsernameKeywordCombo:
@@ -111,19 +126,29 @@ namespace SpireVentureServer
                     unkwPacket.Unpack(msg);
                     if (gameManager.PlayerSaves.ContainsKey(unkwPacket.username))
                     {
-                        // TODO: Create packet that tells client someone's already logged in with that name.
+                        LoginVerificationPacket packet = new LoginVerificationPacket();
+                        packet.message = "You are already logged in.";
+                        ServerMessage(unkwPacket.username + " login error: Already logged in.");
+                        SendAsOneTimeMessage(packet, msg.SenderEndpoint);
                     }
                     else
                     {
                         PlayerSave save = FileGrabber.getPlayerSave(isLocalGame, unkwPacket.username, unkwPacket.keyword);
-                        if (unkwPacket.keyword.Equals(save.Keyword))
+                        if (!unkwPacket.keyword.Equals(save.Keyword))
                         {
-                            // TODO: Create packet saying that his keyword doesn't match the save file with that name.
+                            LoginVerificationPacket packet = new LoginVerificationPacket();
+                            packet.message = "Keyword does not match.";
+                            ServerMessage(unkwPacket.username + " login error: Bad keyword.");
+                            SendAsOneTimeMessage(packet, msg.SenderEndpoint);
                         }
                         else
                         {
+                            LoginVerificationPacket packet = new LoginVerificationPacket();
+                            packet.message = "verified";
+                            SendAsOneTimeMessage(packet, msg.SenderEndpoint);
+
                             gameManager.PlayerSaves.Add(unkwPacket.username, save);
-                            gameManager.EndpointUsernames.Add(unkwPacket.username, msg.SenderEndpoint);
+                            gameManager.RUIDUsernames.Add(unkwPacket.username, msg.SenderConnection.RemoteUniqueIdentifier);
                             ServerMessage(unkwPacket.username + " has logged into the game.");
                         }
                     }
@@ -134,6 +159,13 @@ namespace SpireVentureServer
         private void ServerMessage(string message)
         {
             if (!isLocalGame) Console.WriteLine(message);
+        }
+
+        public void SendAsOneTimeMessage(iPacket packet, IPEndPoint receiver)
+        {
+            NetOutgoingMessage sendMsg = server.CreateMessage();
+            sendMsg = packet.Pack(sendMsg);
+            server.SendUnconnectedMessage(sendMsg, receiver);
         }
     }
 }

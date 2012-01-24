@@ -15,14 +15,15 @@ namespace Util.util
 
     public enum PacketType
     {
-        UsernameKeywordCombo
+        UsernameKeywordCombo,
+        LoginVerification
     }
 
     public class UsernameKeywordComboPacket : iPacket
     {
         public PacketType packetType { get { return PacketType.UsernameKeywordCombo; } }
-        public String username { get; set; }
-        public String keyword { get; set; }
+        public string username { get; set; }
+        public string keyword { get; set; }
 
         public NetOutgoingMessage Pack(NetOutgoingMessage msg)
         {
@@ -36,6 +37,25 @@ namespace Util.util
         {
             username = msg.ReadString();
             keyword = msg.ReadString();
+        }
+    }
+
+    public class LoginVerificationPacket : iPacket
+    {
+
+        public PacketType packetType { get { return PacketType.LoginVerification; } }
+        public string message { get; set; }
+
+        public NetOutgoingMessage Pack(NetOutgoingMessage msg)
+        {   
+            msg.Write((byte)packetType);
+            msg.Write(message);
+            return msg;
+        }
+
+        public void Unpack(NetIncomingMessage msg)
+        {
+            message = msg.ReadString();
         }
     }
 }
