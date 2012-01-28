@@ -181,7 +181,7 @@ namespace SpireVenture.screens.screens
                     packet.username = Path.GetFileNameWithoutExtension(profileFiles[selectedProfileEntry]);
                     packet.keyword = "local";
                     Thread.Sleep(1000);
-                    NetworkManager.Instance.SendData(packet);
+                    NetworkManager.Instance.SendReliableData(packet);
 
                     // stupid thing so we can stay at the same handshake process as multiplayer
                     while (NetworkManager.Instance.Verified.Equals("")) {}

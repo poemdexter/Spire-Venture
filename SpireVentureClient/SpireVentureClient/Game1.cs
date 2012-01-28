@@ -21,7 +21,6 @@ namespace SpireVentureClient
 
         int windowWidth, windowHeight;
 
-        public void hey() { }
         public Game1()
         {
             Content.RootDirectory = "Content";
@@ -70,6 +69,11 @@ namespace SpireVentureClient
         }
 
         protected override void LoadContent() { }
-        protected override void UnloadContent() { }
+        protected override void UnloadContent() 
+        {
+            // on window close, try to shut down single player server and disconnect.
+            // this will also disconnect if we're playing multiplayer as well.
+            NetworkManager.Instance.StopSingleplayerServer();
+        }
     }
 }

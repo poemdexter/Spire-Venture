@@ -81,11 +81,18 @@ namespace SpireVenture.managers
             client.DiscoverKnownPeer(ip, 9007);
         }
 
-        public void SendData(iPacket packet)
+        public void SendUnreliableData(iPacket packet)
         {
             NetOutgoingMessage sendMsg = client.CreateMessage();
             sendMsg = packet.Pack(sendMsg);
             client.SendMessage(sendMsg, NetDeliveryMethod.Unreliable);
+        }
+
+        public void SendReliableData(iPacket packet)
+        {
+            NetOutgoingMessage sendMsg = client.CreateMessage();
+            sendMsg = packet.Pack(sendMsg);
+            client.SendMessage(sendMsg, NetDeliveryMethod.ReliableUnordered);
         }
 
         public void SingleplayerStart()
@@ -107,8 +114,21 @@ namespace SpireVenture.managers
 
         public void StopSingleplayerServer()
         {
-            client.Disconnect("");
-            server.Stop();
+            try
+            {
+                DisconnectClient();
+                server.Stop();
+            }
+            catch (Exception e) { }
+        }
+
+        public void DisconnectClient()
+        {
+            try
+            {
+                client.Disconnect("");
+            }
+            catch (Exception e) { }
         }
 
         public void CheckForNewMessages()

@@ -31,7 +31,7 @@ namespace SpireVenture.screens.screens
         private GameScreen ParentScreen;
         Texture2D backgroundTexture;
         private string failmessage = "";
-
+        private bool postDiscoverySend = false;
         // connection vars
         private double connectingStart = 0;
         private double connectingElapsed = 0;
@@ -119,12 +119,16 @@ namespace SpireVenture.screens.screens
 
             if (currentConnectionStatus == ConnectionStatus.Discovered)
             {
-                // time to send off username/keyword
-                UsernameKeywordComboPacket packet = new UsernameKeywordComboPacket();
-                packet.username = ClientOptions.Instance.Username;
-                packet.keyword = ClientOptions.Instance.Keyword;
-                Thread.Sleep(1000);
-                NetworkManager.Instance.SendData(packet);
+                if (!postDiscoverySend)
+                {
+                    // time to send off username/keyword
+                    UsernameKeywordComboPacket packet = new UsernameKeywordComboPacket();
+                    packet.username = ClientOptions.Instance.Username;
+                    packet.keyword = ClientOptions.Instance.Keyword;
+                    Thread.Sleep(1000);
+                    NetworkManager.Instance.SendReliableData(packet);
+                    postDiscoverySend = true;
+                }
 
                 string verification = NetworkManager.Instance.Verified;
                 if (!verification.Equals(""))
@@ -178,6 +182,10 @@ namespace SpireVenture.screens.screens
                     break;
                 case (ConnectionStatus.Connected):
                     message = "Connected!";
+                    spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, scale, SpriteEffects.None, 0);
+                    break;
+                case (ConnectionStatus.Discovered):
+                    message = "Verifying...";
                     spriteBatch.DrawString(font, message, new Vector2(graphics.Viewport.Width / 2, midscreen), Color.White, 0, font.MeasureString(message) / 2, scale, SpriteEffects.None, 0);
                     break;
                 case (ConnectionStatus.NotFound):
