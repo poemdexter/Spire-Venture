@@ -147,7 +147,15 @@ namespace SpireVenture.managers
 
         private void HandleMessage(NetIncomingMessage msg)
         {
-            
+            PacketType type = (PacketType)msg.ReadByte();
+            switch (type)
+            {
+                case PacketType.ChatMessage:
+                    ChatMessagePacket chatPacket = new ChatMessagePacket();
+                    chatPacket.Unpack(msg);
+                    ChatManager.Instance.addMessage(chatPacket.message);
+                    break;
+            }
         }
     }
 }

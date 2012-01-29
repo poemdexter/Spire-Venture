@@ -146,8 +146,6 @@ namespace SpireVenture.screens.screens
 
             if (currentConnectionStatus == ConnectionStatus.Connected)
             {
-                //TODO D: get Server data for multiplayer so we can start game (before screens)
-
                 screenManager.AddScreen(new MainGameScreen());
                 screenManager.RemoveScreen(this);
                 screenManager.RemoveScreen(this.ParentScreen);

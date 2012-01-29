@@ -39,17 +39,17 @@ namespace SpireVentureServer.managers
             }
         }
 
-        private void Tick()
-        {
-            // one tick of gametime
-            // TODO B: add game tick
-        }
-
         public void HandleDisconnect(bool isLocalGame, string username)
         {
             FileGrabber.SavePlayer(isLocalGame, PlayerSaves[username]);
             PlayerSaves.Remove(username);
             RUIDUsernames.Remove(username);
+        }
+
+        private void Tick()
+        {
+            // one tick of gametime
+            // TODO C: add game tick
         }
     }
 }

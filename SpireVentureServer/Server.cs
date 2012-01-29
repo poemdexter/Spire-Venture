@@ -20,6 +20,8 @@ namespace SpireVentureServer
         double nextUpdate = NetTime.Now;
         private double ticksPerSecond = 20.0;
 
+        private Queue<ChatMessage> ChatMessageQueue;
+
         private GameStateManager gameManager;
 
         public Server(bool local)
@@ -31,6 +33,7 @@ namespace SpireVentureServer
             config.Port = 9007;
             server = new NetServer(config);
             gameManager = new GameStateManager();
+            ChatMessageQueue = new Queue<ChatMessage>();
         }
 
         public void Stop()
@@ -59,33 +62,33 @@ namespace SpireVentureServer
                             server.SendDiscoveryResponse(null, msg.SenderEndpoint);
                             break;
                         case NetIncomingMessageType.VerboseDebugMessage:
-                            ServerMessage(msg.ReadString());
+                            ServerConsoleMessage(msg.ReadString());
                             break;
                         case NetIncomingMessageType.DebugMessage:
-                            ServerMessage(msg.ReadString());
+                            ServerConsoleMessage(msg.ReadString());
                             break;
                         case NetIncomingMessageType.WarningMessage:
-                            ServerMessage(msg.ReadString());
+                            ServerConsoleMessage(msg.ReadString());
                             break;
                         case NetIncomingMessageType.ErrorMessage:
-                            ServerMessage(msg.ReadString());
+                            ServerConsoleMessage(msg.ReadString());
                             break;
                         case NetIncomingMessageType.StatusChanged:
                             switch ((NetConnectionStatus)msg.ReadByte())
                             {
                                 case NetConnectionStatus.Connected:
-                                    ServerMessage("connected");
+                                    ServerConsoleMessage("connected");
                                     break;
                                 case NetConnectionStatus.Disconnecting:
-                                    ServerMessage("disconnecting");
+                                    ServerConsoleMessage("disconnecting");
                                     break;
                                 case NetConnectionStatus.Disconnected:
                                     string user = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
-                                    ServerMessage(user + " disconnected");
+                                    ServerConsoleMessage(user + " disconnected");
                                     gameManager.HandleDisconnect(isLocalGame, user);
                                     if (!isLocalGame)
                                     {
-                                        // TODO F: tell everyone on server that someone disconnected 
+                                        ChatMessageQueue.Enqueue(new ChatMessage("SERVER", user + " has disconnected."));
                                     }
                                     else this.Stop();
                                     break;
@@ -106,13 +109,29 @@ namespace SpireVentureServer
                 now = NetTime.Now;
                 if (now > nextUpdate)
                 {
-                    // TODO A: add sending
+                    List<ChatMessage> chats = getChatMessageList();
+
+                    // for each connected client
+                    foreach (NetConnection connection in server.Connections)
+                    {
+                        // send all chat messages in queue
+                        if (chats.Count > 0)
+                        {
+                            foreach (ChatMessage chatmsg in chats)
+                            {
+                                ChatMessagePacket chatpacket = new ChatMessagePacket();
+                                chatpacket.message = chatmsg.getChatString();
+                                SendReliableData(chatpacket, connection);
+                            }
+                        }
+                    }
+
                     nextUpdate += (1.0 / ticksPerSecond);
                 }
 
                 Thread.Sleep(1);
             }
-            ServerMessage("Stopping Server...");
+            ServerConsoleMessage("Stopping Server...");
             this.server.Shutdown("");
         }
 
@@ -128,8 +147,8 @@ namespace SpireVentureServer
                     {
                         LoginVerificationPacket packet = new LoginVerificationPacket();
                         packet.message = "You are already logged in.";
-                        ServerMessage(unkwPacket.username + " login error: Already logged in.");
-                        SendAsOneTimeMessage(packet, msg.SenderEndpoint);
+                        ServerConsoleMessage(unkwPacket.username + " login error: Already logged in.");
+                        SendUnconnectedMessage(packet, msg.SenderEndpoint);
                     }
                     else
                     {
@@ -138,34 +157,64 @@ namespace SpireVentureServer
                         {
                             LoginVerificationPacket packet = new LoginVerificationPacket();
                             packet.message = "Keyword does not match.";
-                            ServerMessage(unkwPacket.username + " login error: Bad keyword.");
-                            SendAsOneTimeMessage(packet, msg.SenderEndpoint);
+                            ServerConsoleMessage(unkwPacket.username + " login error: Bad keyword.");
+                            SendUnconnectedMessage(packet, msg.SenderEndpoint);
                         }
                         else
                         {
                             LoginVerificationPacket packet = new LoginVerificationPacket();
                             packet.message = "verified";
-                            SendAsOneTimeMessage(packet, msg.SenderEndpoint);
+                            SendUnconnectedMessage(packet, msg.SenderEndpoint);
 
                             gameManager.PlayerSaves.Add(unkwPacket.username, save);
                             gameManager.RUIDUsernames.Add(unkwPacket.username, msg.SenderConnection.RemoteUniqueIdentifier);
-                            ServerMessage(unkwPacket.username + " has logged into the game.");
+                            ServerConsoleMessage(unkwPacket.username + " has logged into the game.");
+                            if (!isLocalGame)
+                            {
+                                ChatMessageQueue.Enqueue(new ChatMessage("SERVER", unkwPacket.username + " has connected."));
+                            }
                         }
                     }
+                    break;
+                case PacketType.ChatMessage:
+                    ChatMessagePacket chatPacket = new ChatMessagePacket();
+                    chatPacket.Unpack(msg);
+                    ChatMessageQueue.Enqueue(new ChatMessage(gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier),chatPacket.message));
                     break;
             }
         }
 
-        private void ServerMessage(string message)
+        private void ServerConsoleMessage(string message)
         {
             if (!isLocalGame) Console.WriteLine(message);
         }
 
-        public void SendAsOneTimeMessage(iPacket packet, IPEndPoint receiver)
+        public void SendUnconnectedMessage(iPacket packet, IPEndPoint receiver)
         {
             NetOutgoingMessage sendMsg = server.CreateMessage();
             sendMsg = packet.Pack(sendMsg);
             server.SendUnconnectedMessage(sendMsg, receiver);
+        }
+
+        public void SendUnreliableData(iPacket packet, NetConnection recip )
+        {
+            NetOutgoingMessage sendMsg = server.CreateMessage();
+            sendMsg = packet.Pack(sendMsg);
+            server.SendMessage(sendMsg, recip, NetDeliveryMethod.Unreliable);
+        }
+
+        public void SendReliableData(iPacket packet, NetConnection recip)
+        {
+            NetOutgoingMessage sendMsg = server.CreateMessage();
+            sendMsg = packet.Pack(sendMsg);
+            server.SendMessage(sendMsg, recip, NetDeliveryMethod.ReliableUnordered);
+        }
+
+        public List<ChatMessage> getChatMessageList()
+        {
+            List<ChatMessage> temp = ChatMessageQueue.ToList();
+            ChatMessageQueue.Clear();
+            return temp;
         }
     }
 }
