@@ -142,7 +142,7 @@ namespace SpireVenture.screens.screens
                                 {
                                     if (doesProfileExist(newProfileName))
                                     {
-                                        screenManager.AddScreen(new PopUpWarningScreen(this, StringConstants.DuplicateProfile));
+                                        screenManager.AddScreen(new PopUpWarningScreen(this, GameConstants.DuplicateProfile));
                                     }
                                     else
                                     {

@@ -52,7 +52,7 @@ namespace SpireVenture.screens.screens
                         break;
                     case (int)MainMenuEntry.Multiplayer:
                         if (ClientOptions.Instance.Username.Equals("") || ClientOptions.Instance.Username.Equals(""))
-                            screenManager.AddScreen(new PopUpWarningScreen(this, StringConstants.MissingUserKeyCombo));
+                            screenManager.AddScreen(new PopUpWarningScreen(this, GameConstants.MissingUserKeyCombo));
                         else
                             screenManager.AddScreen(new IPInputScreen(this));
                         break;

@@ -60,8 +60,8 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lidgren.Network">
-      <HintPath>..\..\Lidgren.Network.dll</HintPath>
+    <Reference Include="Lidgren">
+      <HintPath>..\..\Lidgren.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
@@ -132,6 +132,10 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Entities\Entities.csproj">
+      <Project>{D1D015BA-4598-47DB-A76C-C0BCE51D76E6}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SpireVentureServer\SpireVentureServer.csproj">
       <Project>{35527EA7-5CBD-4AEC-9DF1-64526C599DD6}</Project>
       <Name>SpireVentureServer</Name>

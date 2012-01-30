@@ -7,6 +7,8 @@ using SpireVentureServer.managers;
 using System.Threading;
 using Util.util;
 using System.Net;
+using Entities.framework;
+using Entities.components;
 
 namespace SpireVentureServer
 {
@@ -39,6 +41,9 @@ namespace SpireVentureServer
         public void Stop()
         {
             this.running = false;
+            ServerConsoleMessage("Stopping Server");
+            ServerConsoleMessage("Saving Player Data");
+            gameManager.SaveAllPlayerData(isLocalGame);
         }
 
         public void Start()
@@ -124,6 +129,19 @@ namespace SpireVentureServer
                                 SendReliableData(chatpacket, connection);
                             }
                         }
+
+                        // update all player locations
+                        if (gameManager.PlayerEntities.Count > 0)
+                        {
+                            List<Entity> players = gameManager.PlayerEntities.Values.ToList();
+                            foreach (Entity entity in players)
+                            {
+                                PlayerPositionPacket positionPacket = new PlayerPositionPacket();
+                                positionPacket.username = (entity.GetComponent("Username") as Username).UserNm;
+                                positionPacket.position = (entity.GetComponent("Position") as Position).Vector2Pos;
+                                SendUnreliableData(positionPacket, connection);
+                            }
+                        }
                     }
 
                     nextUpdate += (1.0 / ticksPerSecond);
@@ -164,10 +182,10 @@ namespace SpireVentureServer
                         {
                             LoginVerificationPacket packet = new LoginVerificationPacket();
                             packet.message = "verified";
-                            SendUnconnectedMessage(packet, msg.SenderEndpoint);
-
                             gameManager.PlayerSaves.Add(unkwPacket.username, save);
+                            gameManager.createPlayerEntityFromSave(unkwPacket.username);
                             gameManager.RUIDUsernames.Add(unkwPacket.username, msg.SenderConnection.RemoteUniqueIdentifier);
+                            SendUnconnectedMessage(packet, msg.SenderEndpoint);
                             ServerConsoleMessage(unkwPacket.username + " has logged into the game.");
                             if (!isLocalGame)
                             {
@@ -179,7 +197,10 @@ namespace SpireVentureServer
                 case PacketType.ChatMessage:
                     ChatMessagePacket chatPacket = new ChatMessagePacket();
                     chatPacket.Unpack(msg);
-                    ChatMessageQueue.Enqueue(new ChatMessage(gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier),chatPacket.message));
+                    string username = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
+                    ChatMessage cmsg = new ChatMessage(username,chatPacket.message);
+                    ChatMessageQueue.Enqueue(cmsg);
+                    ServerConsoleMessage(cmsg.getChatString());
                     break;
             }
         }

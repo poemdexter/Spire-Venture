@@ -15,11 +15,12 @@ namespace SpireVenture.managers
         List<GameScreen> screensToUpdate = new List<GameScreen>();
         InputState input = new InputState();
         bool isInitialized;
-        public GraphicsDeviceManager Graphics {get; set;}
+        public GraphicsDeviceManager Graphics { get; set; }
 
         // shared amongst screen components
         public SpriteBatch SpriteBatch { get; set; }
         public SpriteFont Font { get; set; }
+        public Dictionary<string, Texture2D> SpriteDict { get; set; }
 
         // constructor
         public ScreenManager(Game game, GraphicsDeviceManager graphics)
@@ -41,6 +42,8 @@ namespace SpireVenture.managers
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             Font = content.Load<SpriteFont>("font/lofi_font");
+
+            loadSpriteDictionary(content);
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
@@ -137,6 +140,14 @@ namespace SpireVenture.managers
         public GameScreen[] GetScreens()
         {
             return screens.ToArray();
+        }
+
+        // *** add new graphics here
+        private void loadSpriteDictionary(ContentManager content)
+        {
+            SpriteDict = new Dictionary<string, Texture2D>();
+
+            SpriteDict.Add("bandit", content.Load<Texture2D>("entity/char_bandit"));
         }
     }
 }

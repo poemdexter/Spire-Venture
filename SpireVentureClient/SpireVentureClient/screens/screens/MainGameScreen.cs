@@ -8,12 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 using SpireVenture.managers;
 using Util.util;
 using Microsoft.Xna.Framework.Input;
+using Entities.framework;
+using Entities.components;
 
 namespace SpireVenture.screens.screens
 {
     /* This is the main game screen. hurf */
 
-    //TODO B: figure out way to spawn player without jarring load of players (perhaps fade in?)
+    //TODO F: figure out way to spawn player without jarring load of players (perhaps fade in?)
 
     class MainGameScreen : GameScreen
     {
@@ -21,14 +23,19 @@ namespace SpireVenture.screens.screens
         private StringBuilder keyboardInput;
         private KeyboardStringBuilder keyboardStringBuilder;
         private bool IsTypingMessage = false;
+        Dictionary<string, Texture2D> spriteDict;
 
         public MainGameScreen()
         {
             keyboardInput = new StringBuilder();
             keyboardStringBuilder = new KeyboardStringBuilder();
+            spriteDict = new Dictionary<string, Texture2D>();
         }
 
-        public override void LoadContent() { }
+        public override void LoadContent() 
+        {
+            spriteDict = screenManager.SpriteDict;
+        }
 
         public override void HandleInput(InputState input) 
         {
@@ -43,6 +50,14 @@ namespace SpireVenture.screens.screens
                     ChatMessagePacket msgPacket = new ChatMessagePacket();
                     msgPacket.message = chat;
                     NetworkManager.Instance.SendReliableData(msgPacket);
+                    keyboardInput.Clear();
+                }
+            }
+            if (input.IsNewKeyPress(Keys.Escape))
+            {
+                if (IsTypingMessage)
+                {
+                    IsTypingMessage = false;
                     keyboardInput.Clear();
                 }
             }
@@ -71,6 +86,13 @@ namespace SpireVenture.screens.screens
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null);
             spriteBatch.DrawString(font, "Game Screen", new Vector2(graphics.Viewport.Width / 2, 40), Color.White, 0, font.MeasureString("Game Screen") / 2, 2f, SpriteEffects.None, 0);
+
+            // draw players
+            foreach (Entity player in ClientGameManager.Instance.PlayerEntities.Values.ToList())
+            {
+                Vector2 pos = (player.GetComponent("Position") as Position).Vector2Pos;
+                spriteBatch.Draw(spriteDict["bandit"], pos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+            }
 
             // draw messages
             List<ChatMessage> msgList = ChatManager.Instance.getTopMessagesToDisplay();
