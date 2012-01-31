@@ -20,7 +20,8 @@ namespace Util.util
         UsernameKeywordCombo,
         LoginVerification,
         ChatMessage,
-        PlayerPosition
+        PlayerPosition,
+        InputsPacket
     }
 
     public class UsernameKeywordComboPacket : iPacket
@@ -51,7 +52,7 @@ namespace Util.util
         public string message { get; set; }
 
         public NetOutgoingMessage Pack(NetOutgoingMessage msg)
-        {   
+        {
             msg.Write((byte)packetType);
             msg.Write(message);
             return msg;
@@ -100,6 +101,41 @@ namespace Util.util
         {
             username = msg.ReadString();
             position = msg.ReadVector2();
+        }
+    }
+
+    public class InputsPacket : iPacket
+    {
+        public PacketType packetType { get { return PacketType.InputsPacket; } }
+        public Inputs inputs { get; set; }
+
+        public NetOutgoingMessage Pack(NetOutgoingMessage msg)
+        {
+            msg.Write((byte)packetType);
+
+            foreach (bool key in inputs.getStateList())
+            {
+                if (key)
+                {
+                    msg.Write((byte)1);
+                }
+                else
+                {
+                    msg.Write((byte)0);
+                }
+            }
+            return msg;
+        }
+
+        public void Unpack(NetIncomingMessage msg)
+        {
+            inputs = new Inputs(
+                msg.ReadByte(),
+                msg.ReadByte(),
+                msg.ReadByte(),
+                msg.ReadByte(),
+                msg.ReadByte()
+                );
         }
     }
 }

@@ -100,6 +100,7 @@
     <Compile Include="util\ChatMessage.cs" />
     <Compile Include="util\FileGrabber.cs" />
     <Compile Include="util\ClientOptions.cs" />
+    <Compile Include="util\Inputs.cs" />
     <Compile Include="util\KeyboardStringBuilder.cs" />
     <Compile Include="util\PacketTypes.cs" />
     <Compile Include="util\PlayerSave.cs" />

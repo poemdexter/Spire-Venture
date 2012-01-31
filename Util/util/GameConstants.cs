@@ -22,6 +22,7 @@ namespace Util.util
             newPlayer.AddComponent(new Position(GameConstants.DefaultStartPosition));
             newPlayer.AddComponent(new Username(username));
             newPlayer.AddAction(new ChangeDeltaPosition());
+            newPlayer.AddAction(new ChangeAbsPosition());
             return newPlayer;
         }
 

@@ -38,10 +38,8 @@ namespace SpireVenture.managers
         {
             // if player doesn't exist, create it
             if (!PlayerEntities.ContainsKey(username))
-            {
                 PlayerEntities.Add(username, GameConstants.GetNewPlayerEntityTemplate(username));
-            }
-
+            
             PlayerEntities[username].DoAction("ChangeAbsPosition", new ChangePositionArgs(newPosition));
         }
     }

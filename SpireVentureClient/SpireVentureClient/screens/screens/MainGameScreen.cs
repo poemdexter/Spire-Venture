@@ -25,6 +25,8 @@ namespace SpireVenture.screens.screens
         private bool IsTypingMessage = false;
         Dictionary<string, Texture2D> spriteDict;
 
+        private Inputs inputs;
+
         public MainGameScreen()
         {
             keyboardInput = new StringBuilder();
@@ -39,6 +41,8 @@ namespace SpireVenture.screens.screens
 
         public override void HandleInput(InputState input) 
         {
+            inputs.resetStates();
+
             if (input.IsNewKeyPress(Keys.Enter))
             {
                 if (!IsTypingMessage)
@@ -61,6 +65,14 @@ namespace SpireVenture.screens.screens
                     keyboardInput.Clear();
                 }
             }
+            if (!IsTypingMessage)
+            {
+                inputs.Up = (input.CurrentKeyboardState.IsKeyDown(Keys.Up)) ? true : false;
+                inputs.Down = (input.CurrentKeyboardState.IsKeyDown(Keys.Down)) ? true : false;
+                inputs.Left = (input.CurrentKeyboardState.IsKeyDown(Keys.Left)) ? true : false;
+                inputs.Right = (input.CurrentKeyboardState.IsKeyDown(Keys.Right)) ? true : false;
+                inputs.Space = (input.CurrentKeyboardState.IsKeyDown(Keys.Space)) ? true : false;
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -73,7 +85,7 @@ namespace SpireVenture.screens.screens
 
             ChatManager.Instance.updateQueue(gameTime.ElapsedGameTime.Milliseconds);  // refresh for chat in game
             NetworkManager.Instance.CheckForNewMessages();  // get new packets
-            // send new packets
+            NetworkManager.Instance.HandleOutgoingMessages(inputs); // send new packets
             // handle updating screen entities
 
         }

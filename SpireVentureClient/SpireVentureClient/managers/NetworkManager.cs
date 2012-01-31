@@ -85,6 +85,7 @@ namespace SpireVenture.managers
         {
             NetOutgoingMessage sendMsg = client.CreateMessage();
             sendMsg = packet.Pack(sendMsg);
+            Console.WriteLine("packet id: " + packet.packetType);
             client.SendMessage(sendMsg, NetDeliveryMethod.Unreliable);
         }
 
@@ -142,6 +143,16 @@ namespace SpireVenture.managers
                         HandleMessage(msg);
                         break;
                 }
+            }
+        }
+
+        public void HandleOutgoingMessages(Inputs inputs)
+        {
+            if (inputs.HasKeyDown())
+            {
+                InputsPacket inputPacket = new InputsPacket();
+                inputPacket.inputs = inputs;
+                SendUnreliableData(inputPacket);
             }
         }
 

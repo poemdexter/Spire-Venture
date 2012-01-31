@@ -194,6 +194,7 @@ namespace SpireVentureServer
                         }
                     }
                     break;
+
                 case PacketType.ChatMessage:
                     ChatMessagePacket chatPacket = new ChatMessagePacket();
                     chatPacket.Unpack(msg);
@@ -201,6 +202,13 @@ namespace SpireVentureServer
                     ChatMessage cmsg = new ChatMessage(username,chatPacket.message);
                     ChatMessageQueue.Enqueue(cmsg);
                     ServerConsoleMessage(cmsg.getChatString());
+                    break;
+
+                case PacketType.InputsPacket:
+                    InputsPacket inputsPacket = new InputsPacket();
+                    inputsPacket.Unpack(msg);
+                    string un = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
+                    gameManager.HandlePlayerMoving(gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier), inputsPacket.inputs);
                     break;
             }
         }

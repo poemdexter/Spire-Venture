@@ -9,6 +9,7 @@ using Entities.framework;
 using Entities.components;
 using Entities.actions;
 using Microsoft.Xna.Framework;
+using Entities.action_args;
 
 namespace SpireVentureServer.managers
 {
@@ -52,6 +53,18 @@ namespace SpireVentureServer.managers
             // TODO C: add game tick
         }
 
+        public void HandlePlayerMoving(string username, Inputs input)
+        {
+            Entity player = PlayerEntities[username];
+            Vector2 delta = Vector2.Zero;
+            delta += (input.Up) ? new Vector2(0, -5) : Vector2.Zero;
+            delta += (input.Down) ? new Vector2(0, 5) : Vector2.Zero;
+            delta += (input.Left) ? new Vector2(-5, 0) : Vector2.Zero;
+            delta += (input.Right) ? new Vector2(5, 0) : Vector2.Zero;
+            player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
+            // TODO A: FIX ME
+        }
+
         public void HandleDisconnect(bool isLocalGame, string username)
         {
             GameConstants.DumpEntityIntoSaveFile(PlayerEntities[username], PlayerSaves[username]);
@@ -77,6 +90,7 @@ namespace SpireVentureServer.managers
             Player.AddComponent(new Position(Save.Position));
             Player.AddComponent(new Username(Save.Username));
             Player.AddAction(new ChangeAbsPosition());
+            Player.AddAction(new ChangeDeltaPosition());
             PlayerEntities.Add(username, Player);
         }
     }
