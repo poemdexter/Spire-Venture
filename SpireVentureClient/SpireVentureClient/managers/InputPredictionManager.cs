@@ -35,5 +35,28 @@ namespace SpireVenture.managers
         {
             InputRequestQueue.Enqueue(new InputSnapshot(ClientGameManager.Instance.NewSequenceKey, position, delta));
         }
+
+        // takes server authorized position and applies client inputs yet to be handled so we
+        // have most up to date, server authorized position for player
+        public Vector2 getReconciledPosition(byte sequence, Vector2 position)
+        {
+            if (InputRequestQueue.Count <= 1)
+                return position;
+
+            InputSnapshot snapshot = InputRequestQueue.Dequeue();
+            while (snapshot.Sequence != sequence) // dump everything old until we are in sync
+                snapshot = InputRequestQueue.Dequeue();
+
+            Vector2 newPosition = position;
+            List<InputSnapshot> tempSnapshotList = InputRequestQueue.ToList();
+
+            // apply input still not seen from server to client
+            foreach (InputSnapshot shot in tempSnapshotList)
+            {
+                newPosition += shot.Delta;
+            }
+
+            return newPosition;
+        }
     }
 }

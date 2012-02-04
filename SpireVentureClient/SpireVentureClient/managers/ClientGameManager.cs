@@ -57,7 +57,7 @@ namespace SpireVenture.managers
         {
             CheckForEntity(Username);
             
-            // TODO A: Input Prediction
+            // Input Prediction
             // http://www.gabrielgambetta.com/?p=22
 
             Vector2 delta = Vector2.Zero;
@@ -66,19 +66,30 @@ namespace SpireVenture.managers
             delta += (input.Left) ? new Vector2(-5, 0) : Vector2.Zero;
             delta += (input.Right) ? new Vector2(5, 0) : Vector2.Zero;
 
-            Vector2 currentPosition = (PlayerEntities[Username].GetComponent("Position") as Position).Vector2Pos;
-            // store snapshot of move
-            inputPredictionManager.addNewInput(currentPosition, delta);
-            // make the move
-            PlayerEntities[Username].DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
+            if (delta != Vector2.Zero)
+            {
+                Vector2 currentPosition = (PlayerEntities[Username].GetComponent("Position") as Position).Vector2Pos;
+                // store snapshot of move
+                inputPredictionManager.addNewInput(currentPosition, delta);
+                // make the move
+                PlayerEntities[Username].DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
+            }
 
         }
 
         public void HandleNewPlayerPosition(PlayerPositionPacket packet)
         {
-            // TODO B: Check sequence and do magic
+            // http://www.gabrielgambetta.com/?p=22
+            // See "Server reconciliation"
             CheckForEntity(packet.username);
-            PlayerEntities[packet.username].DoAction("ChangeAbsPosition", new ChangePositionArgs(packet.position));
+
+            if (Username == packet.username) // remember this only applies to us, the player
+            {
+                Vector2 newPosition = inputPredictionManager.getReconciledPosition(packet.sequence, packet.position);
+                PlayerEntities[packet.username].DoAction("ChangeAbsPosition", new ChangePositionArgs(newPosition));
+            }
+            else
+                PlayerEntities[packet.username].DoAction("ChangeAbsPosition", new ChangePositionArgs(packet.position));
         }
 
         private void CheckForEntity(string username)
