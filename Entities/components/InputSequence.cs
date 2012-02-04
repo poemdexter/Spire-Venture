@@ -8,7 +8,7 @@ namespace Entities.components
 {
     public class InputSequence : Component
     {
-        public Int16 Sequence { get; set; }
+        public byte Sequence { get; set; }
 
         public InputSequence()
         {

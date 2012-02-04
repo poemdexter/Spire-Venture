@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="managers\ChatManager.cs" />
     <Compile Include="managers\ClientGameManager.cs" />
+    <Compile Include="managers\InputPredictionManager.cs" />
     <Compile Include="managers\NetworkManager.cs" />
     <Compile Include="managers\ScreenManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

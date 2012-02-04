@@ -14,15 +14,16 @@ namespace SpireVenture.managers
     public class ClientGameManager
     {
         private static ClientGameManager instance;
+        private InputPredictionManager inputPredictionManager;
         public Dictionary<string, Entity> PlayerEntities;  // holds player entities
         public string Username { get; set; }
 
-        private Int16 Key = 1;
-        public Int16 SequenceKey
+        public byte Key = 1;
+        public byte NewSequenceKey
         {
             get
             {
-                if (Key++ > 500)
+                if (Key++ > 100)
                     Key = 1;
                 return Key;
             }
@@ -44,6 +45,7 @@ namespace SpireVenture.managers
         private ClientGameManager()
         {
             PlayerEntities = new Dictionary<string, Entity>();
+            inputPredictionManager = new InputPredictionManager();
         }
 
         public void setUsername(string name)
@@ -54,10 +56,23 @@ namespace SpireVenture.managers
         public void PredictPlayerFromInput(Inputs input)
         {
             CheckForEntity(Username);
-
+            
             // TODO A: Input Prediction
             // http://www.gabrielgambetta.com/?p=22
             // need to store sequence number along with input
+
+            Vector2 delta = Vector2.Zero;
+            delta += (input.Up) ? new Vector2(0, -5) : Vector2.Zero;
+            delta += (input.Down) ? new Vector2(0, 5) : Vector2.Zero;
+            delta += (input.Left) ? new Vector2(-5, 0) : Vector2.Zero;
+            delta += (input.Right) ? new Vector2(5, 0) : Vector2.Zero;
+
+            Vector2 currentPosition = (PlayerEntities[Username].GetComponent("Position") as Position).Vector2Pos;
+            // store snapshot of move
+            inputPredictionManager.addNewInput(currentPosition, delta);
+            // make the move
+            PlayerEntities[Username].DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
+
         }
 
         public void HandleNewPlayerPosition(PlayerPositionPacket packet)

@@ -103,7 +103,9 @@ namespace SpireVenture.screens.screens
             inputNow = NetTime.Now;
             if (inputNow > inputNextUpdate)
             {
-                ClientGameManager.Instance.PredictPlayerFromInput(inputs); 
+                // *** these two statements must be together or else we run risk of
+                // *** destroying our input prediction!!!
+                ClientGameManager.Instance.PredictPlayerFromInput(inputs); // predict our position
                 NetworkManager.Instance.HandleOutgoingMessages(inputs); // send new packets
                 inputNextUpdate += (1.0 / GameConstants.CLIENT_INPUT_RATE);
             }

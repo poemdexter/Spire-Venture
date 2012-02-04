@@ -88,7 +88,7 @@ namespace Util.util
         public PacketType packetType { get { return PacketType.PlayerPosition; } }
         public string username { get; set; }
         public Vector2 position { get; set; }
-        public Int16 sequence { get; set; }
+        public byte sequence { get; set; }
 
         public NetOutgoingMessage Pack(NetOutgoingMessage msg)
         {
@@ -103,7 +103,7 @@ namespace Util.util
         {
             username = msg.ReadString();
             position = msg.ReadVector2();
-            sequence = msg.ReadInt16();
+            sequence = msg.ReadByte();
         }
     }
 
@@ -113,7 +113,7 @@ namespace Util.util
     {
         public PacketType packetType { get { return PacketType.InputsPacket; } }
         public Inputs inputs { get; set; }
-        public Int16 sequence { get; set; }
+        public byte sequence { get; set; }
 
         public NetOutgoingMessage Pack(NetOutgoingMessage msg)
         {
@@ -136,7 +136,7 @@ namespace Util.util
 
         public void Unpack(NetIncomingMessage msg)
         {
-            sequence = msg.ReadInt16();
+            sequence = msg.ReadByte();
 
             inputs = new Inputs(
                 msg.ReadByte(),

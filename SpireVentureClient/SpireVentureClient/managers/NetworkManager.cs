@@ -152,7 +152,7 @@ namespace SpireVenture.managers
             {
                 InputsPacket inputPacket = new InputsPacket();
                 inputPacket.inputs = inputs;
-                inputPacket.sequence = ClientGameManager.Instance.SequenceKey;
+                inputPacket.sequence = ClientGameManager.Instance.Key;
                 SendUnreliableData(inputPacket);
             }
         }

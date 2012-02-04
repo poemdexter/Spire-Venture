@@ -8,9 +8,9 @@ namespace Entities.action_args
 {
     public class ChangeInputSequenceArgs : ActionArgs
     {
-        public Int16 NewSequence { get; set; }
+        public byte NewSequence { get; set; }
 
-        public ChangeInputSequenceArgs(Int16 seq)
+        public ChangeInputSequenceArgs(byte seq)
         {
             this.NewSequence = seq;
         }
