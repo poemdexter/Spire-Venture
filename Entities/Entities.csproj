@@ -92,9 +92,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="action args\ChangeInputSequenceArgs.cs" />
     <Compile Include="action args\ChangePositionArgs.cs" />
     <Compile Include="actions\ChangeAbsPosition.cs" />
     <Compile Include="actions\ChangeDeltaPosition.cs" />
+    <Compile Include="actions\ChangeInputSequence.cs" />
+    <Compile Include="components\InputSequence.cs" />
     <Compile Include="components\Position.cs" />
     <Compile Include="components\Username.cs" />
     <Compile Include="framework\Action.cs" />

@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="util\ChatMessage.cs" />
+    <Compile Include="util\EntityFactory.cs" />
     <Compile Include="util\FileGrabber.cs" />
     <Compile Include="util\ClientOptions.cs" />
     <Compile Include="util\Inputs.cs" />

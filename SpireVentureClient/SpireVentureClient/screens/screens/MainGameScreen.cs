@@ -26,9 +26,11 @@ namespace SpireVenture.screens.screens
         private bool IsTypingMessage = false;
         Dictionary<string, Texture2D> spriteDict;
 
-        double now = 0;
-        double nextUpdate = NetTime.Now;
-        private double ticksPerSecond = 20.0;
+        double inputNow = 0;
+        double inputNextUpdate = NetTime.Now;
+
+        double updateNow = 0;
+        double updateNextUpdate = NetTime.Now;
 
         private Inputs inputs;
 
@@ -90,14 +92,20 @@ namespace SpireVenture.screens.screens
             }
 
             ChatManager.Instance.updateQueue(gameTime.ElapsedGameTime.Milliseconds);  // refresh for chat in game
-            NetworkManager.Instance.CheckForNewMessages();  // get new packets
 
-            now = NetTime.Now;
-            if (now > nextUpdate)
+            updateNow = NetTime.Now;
+            if (updateNow > updateNextUpdate)
             {
-                ClientGameManager.Instance.PredictPlayerFromInput(inputs); // TODO A: Input Prediction
+                NetworkManager.Instance.CheckForNewMessages();  // get new packets
+                updateNextUpdate += (1.0 / GameConstants.CLIENT_UPDATE_RATE);
+            }
+
+            inputNow = NetTime.Now;
+            if (inputNow > inputNextUpdate)
+            {
+                ClientGameManager.Instance.PredictPlayerFromInput(inputs); 
                 NetworkManager.Instance.HandleOutgoingMessages(inputs); // send new packets
-                nextUpdate += (1.0 / ticksPerSecond);
+                inputNextUpdate += (1.0 / GameConstants.CLIENT_INPUT_RATE);
             }
            
 

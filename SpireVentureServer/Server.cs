@@ -20,7 +20,6 @@ namespace SpireVentureServer
 
         double now = 0;
         double nextUpdate = NetTime.Now;
-        private double ticksPerSecond = 20.0;
 
         private Queue<ChatMessage> ChatMessageQueue;
 
@@ -139,12 +138,13 @@ namespace SpireVentureServer
                                 PlayerPositionPacket positionPacket = new PlayerPositionPacket();
                                 positionPacket.username = (entity.GetComponent("Username") as Username).UserNm;
                                 positionPacket.position = (entity.GetComponent("Position") as Position).Vector2Pos;
+                                positionPacket.sequence = (entity.GetComponent("InputSequence") as InputSequence).Sequence;
                                 SendUnreliableData(positionPacket, connection);
                             }
                         }
                     }
 
-                    nextUpdate += (1.0 / ticksPerSecond);
+                    nextUpdate += (1.0 / GameConstants.SERVER_UPDATE_RATE);
                 }
 
                 Thread.Sleep(1);
@@ -208,7 +208,7 @@ namespace SpireVentureServer
                     InputsPacket inputsPacket = new InputsPacket();
                     inputsPacket.Unpack(msg);
                     string un = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
-                    gameManager.HandlePlayerMoving(gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier), inputsPacket.inputs);
+                    gameManager.HandlePlayerMoving(gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier), inputsPacket);
                     break;
             }
         }

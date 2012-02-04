@@ -88,12 +88,14 @@ namespace Util.util
         public PacketType packetType { get { return PacketType.PlayerPosition; } }
         public string username { get; set; }
         public Vector2 position { get; set; }
+        public Int16 sequence { get; set; }
 
         public NetOutgoingMessage Pack(NetOutgoingMessage msg)
         {
             msg.Write((byte)packetType);
             msg.Write(username);
             msg.Write(position);
+            msg.Write(sequence);
             return msg;
         }
 
@@ -101,17 +103,22 @@ namespace Util.util
         {
             username = msg.ReadString();
             position = msg.ReadVector2();
+            sequence = msg.ReadInt16();
         }
     }
 
+    // we're adding a sequence number to this packet for server reconciliation
+    // on input prediction for the client.
     public class InputsPacket : iPacket
     {
         public PacketType packetType { get { return PacketType.InputsPacket; } }
         public Inputs inputs { get; set; }
+        public Int16 sequence { get; set; }
 
         public NetOutgoingMessage Pack(NetOutgoingMessage msg)
         {
             msg.Write((byte)packetType);
+            msg.Write(sequence);
 
             foreach (bool key in inputs.getStateList())
             {
@@ -129,6 +136,8 @@ namespace Util.util
 
         public void Unpack(NetIncomingMessage msg)
         {
+            sequence = msg.ReadInt16();
+
             inputs = new Inputs(
                 msg.ReadByte(),
                 msg.ReadByte(),

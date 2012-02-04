@@ -22,7 +22,6 @@ namespace SpireVentureServer.managers
         private bool running = false;
         double now = 0;
         double nextUpdate = NetTime.Now;
-        private double ticksPerSecond = 20.0;
 
         public GameStateManager()
         {
@@ -41,7 +40,7 @@ namespace SpireVentureServer.managers
                 if (now > nextUpdate)
                 {
                     Tick();
-                    nextUpdate += (1.0 / ticksPerSecond);
+                    nextUpdate += (1.0 / GameConstants.SERVER_TICK_RATE);
                 }
             }
         }
@@ -51,20 +50,23 @@ namespace SpireVentureServer.managers
             // TODO D: check if time to save players
         }
 
-        public void HandlePlayerMoving(string username, Inputs input)
+        // TODO D: This is really sloppy way to move players
+        public void HandlePlayerMoving(string username, InputsPacket inPacket)
         {
             Entity player = PlayerEntities[username];
             Vector2 delta = Vector2.Zero;
+            Inputs input = inPacket.inputs;
             delta += (input.Up) ? new Vector2(0, -5) : Vector2.Zero;
             delta += (input.Down) ? new Vector2(0, 5) : Vector2.Zero;
             delta += (input.Left) ? new Vector2(-5, 0) : Vector2.Zero;
             delta += (input.Right) ? new Vector2(5, 0) : Vector2.Zero;
             player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
+            player.DoAction("ChangeInputSequence", new ChangeInputSequenceArgs(inPacket.sequence));
         }
 
         public void HandleDisconnect(bool isLocalGame, string username)
         {
-            GameConstants.DumpEntityIntoSaveFile(PlayerEntities[username], PlayerSaves[username]);
+            EntityFactory.DumpEntityIntoSaveFile(PlayerEntities[username], PlayerSaves[username]);
             FileGrabber.SavePlayer(isLocalGame, PlayerSaves[username]);
             PlayerEntities.Remove(username);
             PlayerSaves.Remove(username);
@@ -75,7 +77,7 @@ namespace SpireVentureServer.managers
         {
             foreach (String username in PlayerEntities.Keys.ToList())
             {
-                GameConstants.DumpEntityIntoSaveFile(PlayerEntities[username], PlayerSaves[username]);
+                EntityFactory.DumpEntityIntoSaveFile(PlayerEntities[username], PlayerSaves[username]);
                 FileGrabber.SavePlayer(isLocalGame, PlayerSaves[username]);
             }
         }
@@ -83,11 +85,8 @@ namespace SpireVentureServer.managers
         public void createPlayerEntityFromSave(string username)
         {
             PlayerSave Save = PlayerSaves[username];
-            Entity Player = new Entity();
-            Player.AddComponent(new Position(Save.Position));
-            Player.AddComponent(new Username(Save.Username));
-            Player.AddAction(new ChangeAbsPosition());
-            Player.AddAction(new ChangeDeltaPosition());
+            Entity Player = EntityFactory.GetNewPlayerEntityTemplate(username);
+            Player.DoAction("ChangeAbsPosition", new ChangePositionArgs(Save.Position));
             PlayerEntities.Add(username, Player);
         }
     }
