@@ -59,7 +59,6 @@ namespace SpireVenture.managers
             
             // TODO A: Input Prediction
             // http://www.gabrielgambetta.com/?p=22
-            // need to store sequence number along with input
 
             Vector2 delta = Vector2.Zero;
             delta += (input.Up) ? new Vector2(0, -5) : Vector2.Zero;
