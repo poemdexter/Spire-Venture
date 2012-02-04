@@ -92,7 +92,7 @@ namespace SpireVenture.managers
                 PlayerEntities[packet.username].DoAction("ChangeAbsPosition", new ChangePositionArgs(packet.position));
         }
 
-        private void CheckForEntity(string username)
+        public void CheckForEntity(string username)
         {
             // if player doesn't exist, create it
             if (!PlayerEntities.ContainsKey(username))

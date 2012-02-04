@@ -42,12 +42,12 @@ namespace SpireVenture.screens.screens
             ClientGameManager.Instance.setUsername(username);
         }
 
-        public override void LoadContent() 
+        public override void LoadContent()
         {
             spriteDict = screenManager.SpriteDict;
         }
 
-        public override void HandleInput(InputState input) 
+        public override void HandleInput(InputState input)
         {
             inputs.resetStates();
 
@@ -109,7 +109,7 @@ namespace SpireVenture.screens.screens
                 NetworkManager.Instance.HandleOutgoingMessages(inputs); // send new packets
                 inputNextUpdate += (1.0 / GameConstants.CLIENT_INPUT_RATE);
             }
-           
+
 
             // handle updating screen entities
 
@@ -121,8 +121,20 @@ namespace SpireVenture.screens.screens
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null);
-            spriteBatch.DrawString(font, "Game Screen", new Vector2(graphics.Viewport.Width / 2, 40), Color.White, 0, font.MeasureString("Game Screen") / 2, 2f, SpriteEffects.None, 0);
+            // get our transformation matrix so we can center camera on player
+            ClientGameManager.Instance.CheckForEntity(ClientGameManager.Instance.Username);
+            Vector2 clientPosition = (ClientGameManager.Instance.PlayerEntities[ClientGameManager.Instance.Username].GetComponent("Position") as Position).Vector2Pos;
+            Matrix transformMatrix = Matrix.CreateTranslation(-clientPosition.X + graphics.Viewport.Width / 2,
+                                                              -clientPosition.Y + graphics.Viewport.Height / 2,
+                                                              1);
+
+            // *** transformation spritebatch.  everything drawn here will be in relation to the player as the center of screen
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, transformMatrix);
+
+            // draw lab floor
+            spriteBatch.Draw(spriteDict["lab"], Vector2.Zero, spriteDict["lab"].Bounds, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0);
+
+            //spriteBatch.DrawString(font, "Game Screen", new Vector2(graphics.Viewport.Width / 2, 40), Color.White, 0, font.MeasureString("Game Screen") / 2, 2f, SpriteEffects.None, 0);
 
             // draw players
             foreach (Entity player in ClientGameManager.Instance.PlayerEntities.Values.ToList())
@@ -130,7 +142,10 @@ namespace SpireVenture.screens.screens
                 Vector2 pos = (player.GetComponent("Position") as Position).Vector2Pos;
                 spriteBatch.Draw(spriteDict["bandit"], pos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
             }
+            spriteBatch.End();
 
+            // *** static position spritebatch.  everything drawn here will not move when player moves.  use for UI, HUD, etc.
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null);
             // draw messages
             List<ChatMessage> msgList = ChatManager.Instance.getTopMessagesToDisplay();
             if (msgList != null)
@@ -138,7 +153,7 @@ namespace SpireVenture.screens.screens
                 int n = 2;
                 foreach (ChatMessage msg in msgList)
                 {
-                    spriteBatch.DrawString(font, msg.getChatString(), new Vector2(5, graphics.Viewport.Height - (15*n)), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, msg.getChatString(), new Vector2(5, graphics.Viewport.Height - (15 * n)), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
                     n++;
                 }
             }
