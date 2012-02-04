@@ -56,7 +56,7 @@ namespace SpireVenture.managers
         public void PredictPlayerFromInput(Inputs input)
         {
             CheckForEntity(Username);
-            
+
             // Input Prediction
             // http://www.gabrielgambetta.com/?p=22
 
@@ -66,15 +66,39 @@ namespace SpireVenture.managers
             delta += (input.Left) ? new Vector2(-5, 0) : Vector2.Zero;
             delta += (input.Right) ? new Vector2(5, 0) : Vector2.Zero;
 
-            if (delta != Vector2.Zero)
-            {
-                Vector2 currentPosition = (PlayerEntities[Username].GetComponent("Position") as Position).Vector2Pos;
-                // store snapshot of move
-                inputPredictionManager.addNewInput(currentPosition, delta);
-                // make the move
-                PlayerEntities[Username].DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
-            }
+            // store previous position for lerp
+            Vector2 currentPosition = (PlayerEntities[Username].GetComponent("Position") as Position).Vector2Pos;
+            PlayerEntities[Username].DoAction("ChangeAbsPreviousPosition", new ChangePositionArgs(currentPosition));
 
+            // store snapshot of move
+            if (delta != Vector2.Zero)
+                inputPredictionManager.addNewInput(currentPosition, delta);
+
+            // make the move
+            PlayerEntities[Username].DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
+            PlayerEntities[Username].DoAction("ChangeCurrentSmoothing", new ChangeCurrentSmoothingArgs(1));
+        }
+
+        public Vector2 LerpPlayer(Entity player)
+        {
+            Vector2 newPos = (player.GetComponent("Position") as Position).Vector2Pos;
+            Vector2 oldPos = (player.GetComponent("PreviousPosition") as PreviousPosition).Vector2Pos;
+            float smoothing = (player.GetComponent("PreviousPosition") as PreviousPosition).currentSmoothing;
+
+            if ((player.GetComponent("Username") as Username).UserNm == Username)
+            {
+                smoothing -= 1.0f / GameConstants.CLIENT_LERP_LENGTH;
+                if (smoothing < 0)
+                    smoothing = 0;
+            }
+            else
+            {
+                smoothing -= 1.0f / GameConstants.SERVER_LERP_LENGTH;
+                if (smoothing < 0)
+                    smoothing = 0;
+            }
+            player.DoAction("ChangeCurrentSmoothing", new ChangeCurrentSmoothingArgs(smoothing));
+            return Vector2.Lerp(oldPos, newPos, smoothing);
         }
 
         public void HandleNewPlayerPosition(PlayerPositionPacket packet)

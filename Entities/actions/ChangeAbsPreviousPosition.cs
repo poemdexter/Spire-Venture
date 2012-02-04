@@ -9,18 +9,18 @@ using Microsoft.Xna.Framework;
 
 namespace Entities.actions
 {
-    public class ChangeAbsPosition : EntityAction
+    public class ChangeAbsPreviousPosition : EntityAction
     {
-        public ChangeAbsPosition()
+        public ChangeAbsPreviousPosition()
         {
-            this.Name = "ChangeAbsPosition";
+            this.Name = "ChangeAbsPreviousPosition";
         }
 
         public override void Do(ActionArgs args)
         {
             if (this.Entity != null && args != null && args is ChangePositionArgs)
             {
-                Position position = this.Entity.GetComponent("Position") as Position;
+                PreviousPosition position = this.Entity.GetComponent("PreviousPosition") as PreviousPosition;
                 if (position != null)
                 {
                     Vector2 newPosition = ((ChangePositionArgs)args).Delta;

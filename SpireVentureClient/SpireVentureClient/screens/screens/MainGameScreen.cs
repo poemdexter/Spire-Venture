@@ -110,9 +110,7 @@ namespace SpireVenture.screens.screens
                 inputNextUpdate += (1.0 / GameConstants.CLIENT_INPUT_RATE);
             }
 
-
             // handle updating screen entities
-
         }
 
         public override void Draw(GameTime gameTime)
@@ -139,8 +137,9 @@ namespace SpireVenture.screens.screens
             // draw players
             foreach (Entity player in ClientGameManager.Instance.PlayerEntities.Values.ToList())
             {
-                Vector2 pos = (player.GetComponent("Position") as Position).Vector2Pos;
-                spriteBatch.Draw(spriteDict["bandit"], pos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+                
+                Vector2 lerpPos = ClientGameManager.Instance.LerpPlayer(player);
+                spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
             }
             spriteBatch.End();
 
