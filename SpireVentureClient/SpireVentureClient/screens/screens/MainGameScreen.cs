@@ -10,6 +10,7 @@ using Util.util;
 using Microsoft.Xna.Framework.Input;
 using Entities.framework;
 using Entities.components;
+using Lidgren.Network;
 
 namespace SpireVenture.screens.screens
 {
@@ -25,13 +26,18 @@ namespace SpireVenture.screens.screens
         private bool IsTypingMessage = false;
         Dictionary<string, Texture2D> spriteDict;
 
+        double now = 0;
+        double nextUpdate = NetTime.Now;
+        private double ticksPerSecond = 20.0;
+
         private Inputs inputs;
 
-        public MainGameScreen()
+        public MainGameScreen(string username)
         {
             keyboardInput = new StringBuilder();
             keyboardStringBuilder = new KeyboardStringBuilder();
             spriteDict = new Dictionary<string, Texture2D>();
+            ClientGameManager.Instance.setUsername(username);
         }
 
         public override void LoadContent() 
@@ -85,7 +91,16 @@ namespace SpireVenture.screens.screens
 
             ChatManager.Instance.updateQueue(gameTime.ElapsedGameTime.Milliseconds);  // refresh for chat in game
             NetworkManager.Instance.CheckForNewMessages();  // get new packets
-            NetworkManager.Instance.HandleOutgoingMessages(inputs); // send new packets
+
+            now = NetTime.Now;
+            if (now > nextUpdate)
+            {
+                ClientGameManager.Instance.PredictPlayerFromInput(inputs); // TODO A: Input Prediction
+                NetworkManager.Instance.HandleOutgoingMessages(inputs); // send new packets
+                nextUpdate += (1.0 / ticksPerSecond);
+            }
+           
+
             // handle updating screen entities
 
         }

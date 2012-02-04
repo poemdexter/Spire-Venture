@@ -15,6 +15,7 @@ namespace SpireVenture.managers
     {
         private static ClientGameManager instance;
         public Dictionary<string, Entity> PlayerEntities;  // holds player entities
+        public string Username { get; set; }
 
         // i'm a singleton!
         public static ClientGameManager Instance
@@ -32,6 +33,16 @@ namespace SpireVenture.managers
         private ClientGameManager()
         {
             PlayerEntities = new Dictionary<string, Entity>();
+        }
+
+        public void setUsername(string name)
+        {
+            Username = name;
+        }
+
+        public void PredictPlayerFromInput(Inputs input)
+        {
+            
         }
 
         public void HandleNewPlayerPosition(string username, Vector2 newPosition)

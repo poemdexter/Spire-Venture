@@ -49,8 +49,6 @@ namespace SpireVentureServer.managers
         private void Tick()
         {
             // TODO D: check if time to save players
-            // one tick of gametime
-            // TODO C: add game tick
         }
 
         public void HandlePlayerMoving(string username, Inputs input)
@@ -62,7 +60,6 @@ namespace SpireVentureServer.managers
             delta += (input.Left) ? new Vector2(-5, 0) : Vector2.Zero;
             delta += (input.Right) ? new Vector2(5, 0) : Vector2.Zero;
             player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(delta));
-            // TODO A: FIX ME
         }
 
         public void HandleDisconnect(bool isLocalGame, string username)

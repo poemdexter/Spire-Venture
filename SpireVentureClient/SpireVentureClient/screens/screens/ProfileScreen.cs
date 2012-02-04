@@ -186,7 +186,7 @@ namespace SpireVenture.screens.screens
                     // stupid thing so we can stay at the same handshake process as multiplayer
                     while (NetworkManager.Instance.Verified.Equals("")) {}
                     
-                    screenManager.AddScreen(new MainGameScreen());
+                    screenManager.AddScreen(new MainGameScreen(packet.username));
                     screenManager.RemoveScreen(this);
                 }
             }

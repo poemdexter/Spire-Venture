@@ -166,7 +166,7 @@ namespace SpireVenture.managers
                     chatPacket.Unpack(msg);
                     ChatManager.Instance.addMessage(chatPacket.message);
                     break;
-                case PacketType.PlayerPosition:
+                case PacketType.PlayerPosition:  // TODO A: Entity Interpolation
                     PlayerPositionPacket posPacket = new PlayerPositionPacket();
                     posPacket.Unpack(msg);
                     ClientGameManager.Instance.HandleNewPlayerPosition(posPacket.username, posPacket.position);

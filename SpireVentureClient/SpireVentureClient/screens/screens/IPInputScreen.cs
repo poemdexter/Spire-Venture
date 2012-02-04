@@ -146,7 +146,7 @@ namespace SpireVenture.screens.screens
 
             if (currentConnectionStatus == ConnectionStatus.Connected)
             {
-                screenManager.AddScreen(new MainGameScreen());
+                screenManager.AddScreen(new MainGameScreen(ClientOptions.Instance.Username));
                 screenManager.RemoveScreen(this);
                 screenManager.RemoveScreen(this.ParentScreen);
             }
