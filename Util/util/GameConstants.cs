@@ -20,7 +20,7 @@ namespace Util.util
         public const double SERVER_UPDATE_RATE = 20.0; 
         public const double CLIENT_INPUT_RATE = 30.0;
         public const double CLIENT_UPDATE_RATE = 20.0;
-        public const float CLIENT_LERP_LENGTH = (float)CLIENT_INPUT_RATE;
-        public const float SERVER_LERP_LENGTH = (float)SERVER_UPDATE_RATE;
+        public const float CLIENT_LERP_LENGTH = 2.0f;
+        public const float SERVER_LERP_LENGTH = 4.0f;
     }
 }

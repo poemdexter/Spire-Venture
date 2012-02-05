@@ -121,9 +121,9 @@ namespace SpireVenture.screens.screens
 
             // get our transformation matrix so we can center camera on player
             ClientGameManager.Instance.CheckForEntity(ClientGameManager.Instance.Username);
-            Vector2 clientPosition = (ClientGameManager.Instance.PlayerEntities[ClientGameManager.Instance.Username].GetComponent("Position") as Position).Vector2Pos;
-            Matrix transformMatrix = Matrix.CreateTranslation(-clientPosition.X + graphics.Viewport.Width / 2,
-                                                              -clientPosition.Y + graphics.Viewport.Height / 2,
+            Vector2 lerpPos = ClientGameManager.Instance.LerpPlayer(ClientGameManager.Instance.PlayerEntities[ClientGameManager.Instance.Username]);
+            Matrix transformMatrix = Matrix.CreateTranslation(-lerpPos.X + graphics.Viewport.Width / 2,
+                                                              -lerpPos.Y + graphics.Viewport.Height / 2,
                                                               1);
 
             // *** transformation spritebatch.  everything drawn here will be in relation to the player as the center of screen
@@ -134,12 +134,17 @@ namespace SpireVenture.screens.screens
 
             //spriteBatch.DrawString(font, "Game Screen", new Vector2(graphics.Viewport.Width / 2, 40), Color.White, 0, font.MeasureString("Game Screen") / 2, 2f, SpriteEffects.None, 0);
 
+            // draw self
+            spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+
             // draw players
             foreach (Entity player in ClientGameManager.Instance.PlayerEntities.Values.ToList())
             {
-                
-                Vector2 lerpPos = ClientGameManager.Instance.LerpPlayer(player);
-                spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+                if ((player.GetComponent("Username") as Username).UserNm != ClientGameManager.Instance.Username)
+                {
+                    lerpPos = ClientGameManager.Instance.LerpPlayer(player);
+                    spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+                }
             }
             spriteBatch.End();
 

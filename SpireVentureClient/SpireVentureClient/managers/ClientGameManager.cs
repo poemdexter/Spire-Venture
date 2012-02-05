@@ -93,12 +93,13 @@ namespace SpireVenture.managers
             }
             else
             {
+                Console.WriteLine("smo "+ smoothing);
                 smoothing -= 1.0f / GameConstants.SERVER_LERP_LENGTH;
                 if (smoothing < 0)
                     smoothing = 0;
             }
             player.DoAction("ChangeCurrentSmoothing", new ChangeCurrentSmoothingArgs(smoothing));
-            return Vector2.Lerp(oldPos, newPos, smoothing);
+            return Vector2.Lerp(newPos, oldPos, smoothing);
         }
 
         public void HandleNewPlayerPosition(PlayerPositionPacket packet)
