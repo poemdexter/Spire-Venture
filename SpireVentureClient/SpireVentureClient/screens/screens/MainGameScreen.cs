@@ -59,10 +59,13 @@ namespace SpireVenture.screens.screens
                 {
                     IsTypingMessage = false;
                     string chat = keyboardInput.ToString();
-                    ChatMessagePacket msgPacket = new ChatMessagePacket();
-                    msgPacket.message = chat;
-                    NetworkManager.Instance.SendReliableData(msgPacket);
-                    keyboardInput.Clear();
+                    if (!chat.Equals(""))  // no empty strings in chat
+                    {
+                        ChatMessagePacket msgPacket = new ChatMessagePacket();
+                        msgPacket.message = chat;
+                        NetworkManager.Instance.SendReliableData(msgPacket);
+                        keyboardInput.Clear();
+                    }
                 }
             }
             if (input.IsNewKeyPress(Keys.Escape))
