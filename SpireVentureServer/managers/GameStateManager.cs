@@ -66,11 +66,14 @@ namespace SpireVentureServer.managers
 
         public void HandleDisconnect(bool isLocalGame, string username)
         {
-            EntityFactory.DumpEntityIntoSaveFile(PlayerEntities[username], PlayerSaves[username]);
-            FileGrabber.SavePlayer(isLocalGame, PlayerSaves[username]);
-            PlayerEntities.Remove(username);
-            PlayerSaves.Remove(username);
-            RUIDUsernames.Remove(username);
+            if (PlayerEntities.ContainsKey(username))
+            {
+                EntityFactory.DumpEntityIntoSaveFile(PlayerEntities[username], PlayerSaves[username]);
+                FileGrabber.SavePlayer(isLocalGame, PlayerSaves[username]);
+                PlayerEntities.Remove(username);
+                PlayerSaves.Remove(username);
+                RUIDUsernames.Remove(username);
+            }
         }
 
         public void SaveAllPlayerData(bool isLocalGame)
@@ -87,6 +90,7 @@ namespace SpireVentureServer.managers
             PlayerSave Save = PlayerSaves[username];
             Entity Player = EntityFactory.GetNewPlayerEntityTemplate(username);
             Player.DoAction("ChangeAbsPosition", new ChangePositionArgs(Save.Position));
+            Player.DoAction("ChangeAbsPreviousPosition", new ChangePositionArgs(Save.Position));
             PlayerEntities.Add(username, Player);
         }
     }

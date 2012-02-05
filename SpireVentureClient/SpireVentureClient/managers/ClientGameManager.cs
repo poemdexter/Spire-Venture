@@ -81,6 +81,7 @@ namespace SpireVenture.managers
 
         public Vector2 LerpPlayer(Entity player)
         {
+
             Vector2 newPos = (player.GetComponent("Position") as Position).Vector2Pos;
             Vector2 oldPos = (player.GetComponent("PreviousPosition") as PreviousPosition).Vector2Pos;
             float smoothing = (player.GetComponent("PreviousPosition") as PreviousPosition).currentSmoothing;
@@ -119,6 +120,11 @@ namespace SpireVenture.managers
                 PlayerEntities[packet.username].DoAction("ChangeAbsPosition", new ChangePositionArgs(packet.position));
                 PlayerEntities[packet.username].DoAction("ChangeCurrentSmoothing", new ChangeCurrentSmoothingArgs(1));
             }
+        }
+
+        public void HandlePlayerDisconnect(string name)
+        {
+            PlayerEntities.Remove(name);
         }
 
         public void CheckForEntity(string username)

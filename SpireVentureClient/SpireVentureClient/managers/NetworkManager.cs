@@ -171,6 +171,11 @@ namespace SpireVenture.managers
                     posPacket.Unpack(msg);
                     ClientGameManager.Instance.HandleNewPlayerPosition(posPacket);
                     break;
+                case PacketType.Disconnect:
+                    DisconnectPacket disPacket = new DisconnectPacket();
+                    disPacket.Unpack(msg);
+                    ClientGameManager.Instance.HandlePlayerDisconnect(disPacket.username);
+                    break;
             }
         }
     }

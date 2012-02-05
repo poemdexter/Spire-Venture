@@ -22,6 +22,7 @@ namespace SpireVentureServer
         double nextUpdate = NetTime.Now;
 
         private Queue<ChatMessage> ChatMessageQueue;
+        private List<string> DisconnectList;
 
         private GameStateManager gameManager;
 
@@ -35,6 +36,7 @@ namespace SpireVentureServer
             server = new NetServer(config);
             gameManager = new GameStateManager();
             ChatMessageQueue = new Queue<ChatMessage>();
+            DisconnectList = new List<string>();
         }
 
         public void Stop()
@@ -89,6 +91,7 @@ namespace SpireVentureServer
                                 case NetConnectionStatus.Disconnected:
                                     string user = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
                                     ServerConsoleMessage(user + " disconnected");
+                                    DisconnectList.Add(user);
                                     gameManager.HandleDisconnect(isLocalGame, user);
                                     if (!isLocalGame)
                                     {
@@ -129,6 +132,21 @@ namespace SpireVentureServer
                             }
                         }
 
+                        // send notifications of disconnect
+                        if (DisconnectList.Count > 0)
+                        {
+                            foreach (string name in DisconnectList)
+                            {
+                                if (!name.Equals(""))
+                                {
+                                    DisconnectPacket disPacket = new DisconnectPacket();
+                                    disPacket.username = name;
+                                    SendReliableData(disPacket, connection);
+                                }
+                            }
+                            DisconnectList.Clear();
+                        }
+
                         // update all player locations
                         if (gameManager.PlayerEntities.Count > 0)
                         {
@@ -167,6 +185,7 @@ namespace SpireVentureServer
                         packet.message = "You are already logged in.";
                         ServerConsoleMessage(unkwPacket.username + " login error: Already logged in.");
                         SendUnconnectedMessage(packet, msg.SenderEndpoint);
+                        //server.Connections.Remove(server.GetConnection(msg.SenderEndpoint));  // try
                     }
                     else
                     {
@@ -177,6 +196,7 @@ namespace SpireVentureServer
                             packet.message = "Keyword does not match.";
                             ServerConsoleMessage(unkwPacket.username + " login error: Bad keyword.");
                             SendUnconnectedMessage(packet, msg.SenderEndpoint);
+                            //server.Connections.Remove(server.GetConnection(msg.SenderEndpoint));  // try
                         }
                         else
                         {
@@ -199,16 +219,22 @@ namespace SpireVentureServer
                     ChatMessagePacket chatPacket = new ChatMessagePacket();
                     chatPacket.Unpack(msg);
                     string username = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
-                    ChatMessage cmsg = new ChatMessage(username,chatPacket.message);
-                    ChatMessageQueue.Enqueue(cmsg);
-                    ServerConsoleMessage(cmsg.getChatString());
+                    if (!username.Equals(""))
+                    {
+                        ChatMessage cmsg = new ChatMessage(username, chatPacket.message);
+                        ChatMessageQueue.Enqueue(cmsg);
+                        ServerConsoleMessage(cmsg.getChatString());
+                    }
                     break;
 
                 case PacketType.InputsPacket:
                     InputsPacket inputsPacket = new InputsPacket();
                     inputsPacket.Unpack(msg);
                     string un = gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier);
-                    gameManager.HandlePlayerMoving(gameManager.RUIDUsernames.GetValue(msg.SenderConnection.RemoteUniqueIdentifier), inputsPacket);
+                    if (!un.Equals(""))
+                    {
+                        gameManager.HandlePlayerMoving(un, inputsPacket);
+                    }
                     break;
             }
         }
@@ -225,7 +251,7 @@ namespace SpireVentureServer
             server.SendUnconnectedMessage(sendMsg, receiver);
         }
 
-        public void SendUnreliableData(iPacket packet, NetConnection recip )
+        public void SendUnreliableData(iPacket packet, NetConnection recip)
         {
             NetOutgoingMessage sendMsg = server.CreateMessage();
             sendMsg = packet.Pack(sendMsg);

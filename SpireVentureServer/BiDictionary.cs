@@ -39,17 +39,28 @@ namespace SpireVentureServer
 
         public long GetValue(string usernameKey)
         {
-            return PlayertoRUIDDict[usernameKey];
+            if (UserExists(usernameKey))
+                return PlayertoRUIDDict[usernameKey];
+            else
+                return 0;
         }
 
         public string GetValue(long endPointKey)
         {
-            return RUIDtoPlayerDict[endPointKey];
+            if (UserExists(endPointKey))
+                return RUIDtoPlayerDict[endPointKey];
+            else
+                return "";
         }
 
         public bool UserExists(string username)
         {
             return PlayertoRUIDDict.ContainsKey(username);
+        }
+
+        public bool UserExists(long endPointKey)
+        {
+            return RUIDtoPlayerDict.ContainsKey(endPointKey);
         }
     }
 }

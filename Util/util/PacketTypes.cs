@@ -21,7 +21,8 @@ namespace Util.util
         LoginVerification,
         ChatMessage,
         PlayerPosition,
-        InputsPacket
+        InputsPacket,
+        Disconnect
     }
 
     public class UsernameKeywordComboPacket : iPacket
@@ -145,6 +146,24 @@ namespace Util.util
                 msg.ReadByte(),
                 msg.ReadByte()
                 );
+        }
+    }
+
+    public class DisconnectPacket : iPacket
+    {
+        public PacketType packetType { get { return PacketType.Disconnect; } }
+        public string username { get; set; }
+
+        public NetOutgoingMessage Pack(NetOutgoingMessage msg)
+        {
+            msg.Write((byte)packetType);
+            msg.Write(username);
+            return msg;
+        }
+
+        public void Unpack(NetIncomingMessage msg)
+        {
+            username = msg.ReadString();
         }
     }
 }

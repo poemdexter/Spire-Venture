@@ -14,15 +14,18 @@ namespace Util.util
         public static Entity GetNewPlayerEntityTemplate(string username)
         {
             Entity newPlayer = new Entity();
+
             newPlayer.AddComponent(new Position(GameConstants.DefaultStartPosition));
             newPlayer.AddComponent(new Username(username));
+            newPlayer.AddComponent(new PreviousPosition(GameConstants.DefaultStartPosition));
+            newPlayer.AddComponent(new InputSequence());
+
             newPlayer.AddAction(new ChangeDeltaPosition());
             newPlayer.AddAction(new ChangeAbsPosition());
-            newPlayer.AddComponent(new InputSequence());
             newPlayer.AddAction(new ChangeInputSequence());
-            newPlayer.AddComponent(new PreviousPosition(GameConstants.DefaultStartPosition));
             newPlayer.AddAction(new ChangeAbsPreviousPosition());
             newPlayer.AddAction(new ChangeCurrentSmoothing());
+
             return newPlayer;
         }
 

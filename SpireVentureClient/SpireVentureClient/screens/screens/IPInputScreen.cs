@@ -139,7 +139,7 @@ namespace SpireVenture.screens.screens
                       {
                           currentConnectionStatus = ConnectionStatus.FailVerify;
                           failmessage = verification;
-                          Console.WriteLine(verification);
+                          NetworkManager.Instance.DisconnectClient();
                       }
                 }
             }
