@@ -113,7 +113,12 @@ namespace SpireVenture.managers
                 PlayerEntities[packet.username].DoAction("ChangeAbsPosition", new ChangePositionArgs(newPosition));
             }
             else
+            {
+                Vector2 oldPos = (PlayerEntities[packet.username].GetComponent("Position") as Position).Vector2Pos;
+                PlayerEntities[packet.username].DoAction("ChangeAbsPreviousPosition", new ChangePositionArgs(oldPos));
                 PlayerEntities[packet.username].DoAction("ChangeAbsPosition", new ChangePositionArgs(packet.position));
+                PlayerEntities[packet.username].DoAction("ChangeCurrentSmoothing", new ChangeCurrentSmoothingArgs(1));
+            }
         }
 
         public void CheckForEntity(string username)

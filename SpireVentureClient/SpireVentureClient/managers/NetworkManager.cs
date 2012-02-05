@@ -85,7 +85,6 @@ namespace SpireVenture.managers
         {
             NetOutgoingMessage sendMsg = client.CreateMessage();
             sendMsg = packet.Pack(sendMsg);
-            Console.WriteLine("packet id: " + packet.packetType);
             client.SendMessage(sendMsg, NetDeliveryMethod.Unreliable);
         }
 
