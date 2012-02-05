@@ -57,7 +57,7 @@ namespace SpireVenture.screens.screens
             menuEntries.Add(new MenuEntry("Keyword:"));
             menuEntries.Add(new MenuEntry("Resolution"));
             menuEntries.Add(new MenuEntry("Fullscreen?"));
-            menuEntries.Add(new MenuEntry("Exit"));
+            menuEntries.Add(new MenuEntry("Back"));
             menuEntries[0].Active = true;
 
             var displays = GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.Select(x => new { x.Width, x.Height }).Distinct();

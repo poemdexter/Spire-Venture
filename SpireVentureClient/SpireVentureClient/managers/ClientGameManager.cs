@@ -93,7 +93,6 @@ namespace SpireVenture.managers
             }
             else
             {
-                Console.WriteLine("smo "+ smoothing);
                 smoothing -= 1.0f / GameConstants.SERVER_LERP_LENGTH;
                 if (smoothing < 0)
                     smoothing = 0;
