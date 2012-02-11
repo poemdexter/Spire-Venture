@@ -12,7 +12,7 @@ namespace SpireVenture.screens.screens
 {
     class MainMenuScreen : GameScreen
     {
-        private const string titleText = "Spire Venture 0.1a";
+        private const string titleText = "Spire Venture " + GameConstants.VERSION;
 
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         int selectedEntry = 0;

@@ -8,6 +8,9 @@ namespace Util.util
 {
     public static class GameConstants
     {
+        // *** VERSION NUMBER ***
+        public const string VERSION = "0.0.3a";
+
         // *** UI ELEMENT CONSTANTS ***
         public const string MissingUserKeyCombo = "Please enter username and keyword in Options before playing Multiplayer.";
         public const string DuplicateProfile = "You cannot create another profile with the same name as a previous.";
@@ -22,5 +25,9 @@ namespace Util.util
         public const double CLIENT_UPDATE_RATE = 20.0;
         public const float CLIENT_LERP_LENGTH = 2.0f;
         public const float SERVER_LERP_LENGTH = 3.0f;
+
+        // *** CHAT CONSTANTS ***
+        public const int NUMBER_OF_CHAT_LINES = 10;
+        public const int SECONDS_MSG_LASTS = 10 * 1000; // * 1000 because milliseconds
     }
 }

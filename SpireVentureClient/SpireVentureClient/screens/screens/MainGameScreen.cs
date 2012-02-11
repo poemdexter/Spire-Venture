@@ -138,7 +138,7 @@ namespace SpireVenture.screens.screens
             //spriteBatch.DrawString(font, "Game Screen", new Vector2(graphics.Viewport.Width / 2, 40), Color.White, 0, font.MeasureString("Game Screen") / 2, 2f, SpriteEffects.None, 0);
 
             // draw self
-            spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+            spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0);
 
             // draw players
             foreach (Entity player in ClientGameManager.Instance.PlayerEntities.Values.ToList())
@@ -146,7 +146,7 @@ namespace SpireVenture.screens.screens
                 if ((player.GetComponent("Username") as Username).UserNm != ClientGameManager.Instance.Username)
                 {
                     lerpPos = ClientGameManager.Instance.LerpPlayer(player);
-                    spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+                    spriteBatch.Draw(spriteDict["bandit"], lerpPos, spriteDict["bandit"].Bounds, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0);
                 }
             }
             spriteBatch.End();

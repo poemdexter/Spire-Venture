@@ -10,8 +10,6 @@ namespace SpireVenture.managers
     {
         private static ChatManager instance;
         private Queue<ChatMessage> messageQueue;
-        public const int NUMBER_OF_CHAT_LINES = 10;
-        private const int SECONDS_MSG_LASTS = 10 * 1000; // * 1000 because milliseconds
 
         public static ChatManager Instance
         {
@@ -32,7 +30,9 @@ namespace SpireVenture.managers
 
         public void addMessage(string message)
         {
-            messageQueue.Enqueue(new ChatMessage(message, SECONDS_MSG_LASTS));
+            //TODO add the chat split code here
+
+            messageQueue.Enqueue(new ChatMessage(message, GameConstants.SECONDS_MSG_LASTS));
         }
 
         public List<ChatMessage> getTopMessagesToDisplay()
@@ -40,7 +40,7 @@ namespace SpireVenture.managers
             List<ChatMessage> messages = messageQueue.ToList();
             if (messages.Count > 0)
             {
-                int lines = Math.Min(NUMBER_OF_CHAT_LINES, messages.Count);
+                int lines = Math.Min(GameConstants.NUMBER_OF_CHAT_LINES, messages.Count);
                 List<ChatMessage> temp = new List<ChatMessage>();
                 for (int a = lines; a > 0; a--)
                 {
