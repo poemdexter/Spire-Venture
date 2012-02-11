@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Util.util
 {
     public static class GameConstants
     {
+        public static SpriteFont FONT { get; set; }
+
         // *** VERSION NUMBER ***
         public const string VERSION = "0.0.3a";
 
@@ -27,7 +30,9 @@ namespace Util.util
         public const float SERVER_LERP_LENGTH = 3.0f;
 
         // *** CHAT CONSTANTS ***
+        public const int MAX_CHARACTERS_IN_MSG = 140;
         public const int NUMBER_OF_CHAT_LINES = 10;
+        public const float CHAT_SCALE = 2f;
         public const int SECONDS_MSG_LASTS = 10 * 1000; // * 1000 because milliseconds
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using SpireVenture.screens.framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Util.util;
 
 namespace SpireVenture.managers
 {
@@ -42,6 +43,7 @@ namespace SpireVenture.managers
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             Font = content.Load<SpriteFont>("font/lofi_font");
+            GameConstants.FONT = Font;
 
             loadSpriteDictionary(content);
 

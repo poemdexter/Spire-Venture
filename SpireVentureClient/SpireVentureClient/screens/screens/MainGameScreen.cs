@@ -160,7 +160,7 @@ namespace SpireVenture.screens.screens
                 int n = 2;
                 foreach (ChatMessage msg in msgList)
                 {
-                    spriteBatch.DrawString(font, msg.getChatString(), new Vector2(5, graphics.Viewport.Height - (15 * n)), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, msg.getChatString(), new Vector2(5, graphics.Viewport.Height - (15 * n)), Color.White, 0, Vector2.Zero, GameConstants.CHAT_SCALE, SpriteEffects.None, 0);
                     n++;
                 }
             }

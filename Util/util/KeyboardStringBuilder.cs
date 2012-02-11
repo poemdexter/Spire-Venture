@@ -202,7 +202,7 @@ namespace Util.util
 
             char? newChar = GetCharacter(key, shift, capsLock, numLock);
 
-            if (newChar.HasValue) text.Append(newChar.Value);
+            if (newChar.HasValue && text.Length <= GameConstants.MAX_CHARACTERS_IN_MSG) text.Append(newChar.Value);
         }
 
         /// <summary>
