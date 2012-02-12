@@ -29,13 +29,13 @@ namespace SpireVenture.managers
             messageQueue = new Queue<ChatMessage>();
         }
 
-        public void addMessage(string message)
+        public void addMessage(string username, string message)
         {
             SpriteFont font = GameConstants.FONT;
             int maxSize = ClientOptions.Instance.ResolutionWidth - 20;
-            Console.WriteLine("len:" + font.MeasureString(message).X + " max:" + maxSize);
+
             //if text length > screen width
-            if (font.MeasureString(message).X * GameConstants.CHAT_SCALE > maxSize)
+            if (font.MeasureString(username + message).X * GameConstants.CHAT_SCALE > maxSize)
             {
                 // make list of word strings
                 List<string> words = message.Split(' ').ToList();
@@ -48,7 +48,7 @@ namespace SpireVenture.managers
                     if (!switchCheck)
                     {
                         // should we go to next line?
-                        if (font.MeasureString(str1.ToString() + word).X * GameConstants.CHAT_SCALE >= maxSize)
+                        if (font.MeasureString(username + str1.ToString() + word).X * GameConstants.CHAT_SCALE >= maxSize)
                         {
                             switchCheck = true;
                             str2.Append(word + " ");
@@ -60,11 +60,11 @@ namespace SpireVenture.managers
 
                 Console.WriteLine(str1);
                 Console.WriteLine(str2);
-                messageQueue.Enqueue(new ChatMessage(str1.ToString(), GameConstants.SECONDS_MSG_LASTS));
-                messageQueue.Enqueue(new ChatMessage(str2.ToString(), GameConstants.SECONDS_MSG_LASTS));
+                messageQueue.Enqueue(new ChatMessage(username, str1.ToString(), GameConstants.SECONDS_MSG_LASTS));
+                messageQueue.Enqueue(new ChatMessage("<<", str2.ToString(), GameConstants.SECONDS_MSG_LASTS));
             }
             else
-                messageQueue.Enqueue(new ChatMessage(message, GameConstants.SECONDS_MSG_LASTS));
+                messageQueue.Enqueue(new ChatMessage(username, message, GameConstants.SECONDS_MSG_LASTS));
         }
 
         public List<ChatMessage> getTopMessagesToDisplay()
@@ -92,6 +92,21 @@ namespace SpireVenture.managers
                 if (msg.TimeCreated <= 0)
                     messageQueue.Dequeue();
             }
+        }
+
+        // does the fancy move chat while typing so you can see
+        public string getTruncatedChatInput(string input)
+        {
+            SpriteFont font = GameConstants.FONT;
+            int maxSize = ClientOptions.Instance.ResolutionWidth - 20;
+
+            int x = 1;
+            while(font.MeasureString(input + "_").X * GameConstants.CHAT_SCALE > maxSize)
+            {
+                input = input.Substring(x, input.Length - x);
+                x++;
+            }
+            return input + "_";
         }
     }
 }

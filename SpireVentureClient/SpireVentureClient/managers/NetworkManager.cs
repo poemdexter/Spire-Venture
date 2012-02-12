@@ -164,7 +164,7 @@ namespace SpireVenture.managers
                 case PacketType.ChatMessage:
                     ChatMessagePacket chatPacket = new ChatMessagePacket();
                     chatPacket.Unpack(msg);
-                    ChatManager.Instance.addMessage(chatPacket.message);
+                    ChatManager.Instance.addMessage(chatPacket.username, chatPacket.message);
                     break;
                 case PacketType.PlayerPosition:
                     PlayerPositionPacket posPacket = new PlayerPositionPacket();

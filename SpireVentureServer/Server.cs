@@ -127,7 +127,8 @@ namespace SpireVentureServer
                             foreach (ChatMessage chatmsg in chats)
                             {
                                 ChatMessagePacket chatpacket = new ChatMessagePacket();
-                                chatpacket.message = chatmsg.getChatString();
+                                chatpacket.username = chatmsg.getRealNameString();
+                                chatpacket.message = chatmsg.getChatMessageString();
                                 SendReliableData(chatpacket, connection);
                             }
                         }

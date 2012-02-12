@@ -160,15 +160,25 @@ namespace SpireVenture.screens.screens
                 int n = 2;
                 foreach (ChatMessage msg in msgList)
                 {
-                    spriteBatch.DrawString(font, msg.getChatString(), new Vector2(5, graphics.Viewport.Height - (15 * n)), Color.White, 0, Vector2.Zero, GameConstants.CHAT_SCALE, SpriteEffects.None, 0);
+                    if (msg.getChatNameString().Equals(""))
+                        spriteBatch.DrawString(font, msg.getChatMessageString(), new Vector2(5 + (font.MeasureString(msg.getChatNameString()).X), graphics.Viewport.Height - (15 * n)), Color.Yellow, 0, Vector2.Zero, GameConstants.CHAT_SCALE, SpriteEffects.None, 0);
+                    else if (msg.getRealNameString().Equals("<<"))
+                        spriteBatch.DrawString(font, msg.getChatMessageString(), new Vector2(5 + (font.MeasureString(msg.getChatNameString()).X), graphics.Viewport.Height - (15 * n)), Color.White, 0, Vector2.Zero, GameConstants.CHAT_SCALE, SpriteEffects.None, 0);
+                    else
+                    {
+                        spriteBatch.DrawString(font, msg.getChatNameString(), new Vector2(5, graphics.Viewport.Height - (15 * n)), Color.Yellow, 0, Vector2.Zero, GameConstants.CHAT_SCALE, SpriteEffects.None, 0);
+                        spriteBatch.DrawString(font, msg.getChatMessageString(), new Vector2(5 + ((font.MeasureString(msg.getChatNameString()).X * GameConstants.CHAT_SCALE)), graphics.Viewport.Height - (15 * n)), Color.White, 0, Vector2.Zero, GameConstants.CHAT_SCALE, SpriteEffects.None, 0);
+                    }
                     n++;
                 }
             }
 
             // draw typing of message
             if (IsTypingMessage)
-                spriteBatch.DrawString(font, keyboardInput.ToString() + "_", new Vector2(5, graphics.Viewport.Height - 15), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
-
+            {
+                string chat = ChatManager.Instance.getTruncatedChatInput(keyboardInput.ToString());
+                spriteBatch.DrawString(font, chat, new Vector2(5, graphics.Viewport.Height - 15), Color.White, 0, Vector2.Zero, 2f, SpriteEffects.None, 0);
+            }
             spriteBatch.End();
         }
     }

@@ -70,16 +70,19 @@ namespace Util.util
 
         public PacketType packetType { get { return PacketType.ChatMessage; } }
         public string message { get; set; }
+        public string username { get; set; }
 
         public NetOutgoingMessage Pack(NetOutgoingMessage msg)
         {
             msg.Write((byte)packetType);
+            msg.Write(username);
             msg.Write(message);
             return msg;
         }
 
         public void Unpack(NetIncomingMessage msg)
         {
+            username = msg.ReadString();
             message = msg.ReadString();
         }
     }

@@ -18,6 +18,13 @@ namespace Util.util
             Username = username;
         }
 
+        public ChatMessage(string username, string message, int timecreated)
+        {
+            Message = message;
+            Username = username;
+            TimeCreated = timecreated;
+        }
+
         public ChatMessage(string message, int timecreated)
         {
             Message = message;
@@ -31,12 +38,28 @@ namespace Util.util
             Username = "";
         }
 
+        // for server
         public string getChatString()
         {
+            return "[" + Username + "] " + Message;
+        }
+
+        public string getRealNameString()
+        {
+            return Username;
+        }
+
+        public string getChatNameString()
+        {
             if (!Username.Equals(""))
-                return "[" + Username + "] " + Message;
+                return "[" + Username + "] ";
             else
-                return Message;
+                return "";
+        }
+
+        public string getChatMessageString()
+        {
+            return Message;
         }
     }
 }
