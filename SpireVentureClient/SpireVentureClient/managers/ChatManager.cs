@@ -55,7 +55,8 @@ namespace SpireVenture.managers
                         }
                         else str1.Append(word + " ");
                     }
-                    else str2.Append(word + " ");
+                    else str2.Append(word + " "68cpeydl
+                    g5se );
                 }
 
                 Console.WriteLine(str1);
