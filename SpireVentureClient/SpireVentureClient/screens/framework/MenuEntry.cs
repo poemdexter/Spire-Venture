@@ -51,4 +51,11 @@ namespace SpireVenture.screens.framework
         New,
         Cancel
     }
+
+    public enum MainGameOptionsEntry
+    {
+        ExitMain,
+        ExitDesktop,
+        Cancel
+    }
 }

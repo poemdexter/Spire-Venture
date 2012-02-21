@@ -75,6 +75,10 @@ namespace SpireVenture.screens.screens
                     IsTypingMessage = false;
                     keyboardInput.Clear();
                 }
+                else 
+                {
+                    screenManager.AddScreen(new MainGameOptionsScreen(this));
+                }
             }
             if (!IsTypingMessage)
             {

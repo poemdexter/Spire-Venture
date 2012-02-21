@@ -25,6 +25,7 @@ namespace SpireVentureServer
         private List<string> DisconnectList;
 
         private GameStateManager gameManager;
+        private Thread gsthread;
 
         public Server(bool local)
         {
@@ -45,15 +46,16 @@ namespace SpireVentureServer
             ServerConsoleMessage("Stopping Server");
             ServerConsoleMessage("Saving Player Data");
             gameManager.SaveAllPlayerData(isLocalGame);
+            gsthread.Abort();
         }
 
         public void Start()
         {
             this.server.Start();
 
-            Thread thread = new Thread(new ThreadStart(gameManager.Start));
-            thread.Name = "GameStateManager";
-            thread.Start();
+            gsthread = new Thread(new ThreadStart(gameManager.Start));
+            gsthread.Name = "GameStateManager";
+            gsthread.Start();
 
             this.running = true;
             while (running)

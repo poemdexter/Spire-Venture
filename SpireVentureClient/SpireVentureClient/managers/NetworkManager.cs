@@ -14,6 +14,7 @@ namespace SpireVenture.managers
         private static NetworkManager instance;
         private NetClient client;
         private Server server;
+        private Thread serverThread;
 
         // i'm a singleton!
         public static NetworkManager Instance
@@ -99,7 +100,7 @@ namespace SpireVenture.managers
         {
             // start Server
             server = new Server(true);
-            Thread serverThread = new Thread(new ThreadStart(server.Start));
+            serverThread = new Thread(new ThreadStart(server.Start));
             serverThread.Name = "SpireVenture Singleplayer Server";
             serverThread.Start();
             
@@ -118,6 +119,7 @@ namespace SpireVenture.managers
             {
                 DisconnectClient();
                 server.Stop();
+                serverThread.Abort();
             }
             catch (Exception e) { }
         }
