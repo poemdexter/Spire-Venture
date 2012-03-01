@@ -103,6 +103,7 @@
     <Compile Include="util\ClientOptions.cs" />
     <Compile Include="util\Inputs.cs" />
     <Compile Include="util\KeyboardStringBuilder.cs" />
+    <Compile Include="util\MobFactory.cs" />
     <Compile Include="util\PacketTypes.cs" />
     <Compile Include="util\PlayerSave.cs" />
     <Compile Include="util\GameConstants.cs" />
@@ -112,6 +113,12 @@
       <Project>{D1D015BA-4598-47DB-A76C-C0BCE51D76E6}</Project>
       <Name>Entities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\Mobs.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

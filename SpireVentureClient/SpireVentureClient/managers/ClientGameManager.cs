@@ -16,6 +16,8 @@ namespace SpireVenture.managers
         private static ClientGameManager instance;
         private InputPredictionManager inputPredictionManager;
         public Dictionary<string, Entity> PlayerEntities;  // holds player entities
+        public Dictionary<int, Entity> MobEntities;
+        private MobFactory mobFactory;
         public string Username { get; set; }
 
         public byte Key = 1;
@@ -45,7 +47,9 @@ namespace SpireVenture.managers
         private ClientGameManager()
         {
             PlayerEntities = new Dictionary<string, Entity>();
+            MobEntities = new Dictionary<int, Entity>();
             inputPredictionManager = new InputPredictionManager();
+            mobFactory = new MobFactory();
         }
 
         public void setUsername(string name)
@@ -55,7 +59,7 @@ namespace SpireVenture.managers
 
         public void PredictPlayerFromInput(Inputs input)
         {
-            CheckForEntity(Username);
+            CheckForPlayerEntity(Username);
 
             // Input Prediction
             // http://www.gabrielgambetta.com/?p=22
@@ -106,7 +110,7 @@ namespace SpireVenture.managers
         {
             // http://www.gabrielgambetta.com/?p=22
             // See "Server reconciliation"
-            CheckForEntity(packet.username);
+            CheckForPlayerEntity(packet.username);
 
             if (Username == packet.username) // remember this only applies to us, the player
             {
@@ -122,16 +126,30 @@ namespace SpireVenture.managers
             }
         }
 
+        public void HandleMobMovement(MobPositionPacket packet)
+        {
+            CheckForMobEntity(packet.id);
+            
+            // TODO A: the movement for mobs
+        }
+
         public void HandlePlayerDisconnect(string name)
         {
             PlayerEntities.Remove(name);
         }
 
-        public void CheckForEntity(string username)
+        public void CheckForPlayerEntity(string username)
         {
             // if player doesn't exist, create it
             if (!PlayerEntities.ContainsKey(username))
                 PlayerEntities.Add(username, EntityFactory.GetNewPlayerEntityTemplate(username));
+        }
+
+        public void CheckForMobEntity(int id)
+        {
+            // if player doesn't exist, create it
+            if (!MobEntities.ContainsKey(id))
+                MobEntities.Add(id, EntityFactory.GetNewMobEntityTemplate());
         }
     }
 }

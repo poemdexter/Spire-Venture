@@ -178,6 +178,11 @@ namespace SpireVenture.managers
                     disPacket.Unpack(msg);
                     ClientGameManager.Instance.HandlePlayerDisconnect(disPacket.username);
                     break;
+                case PacketType.MobPosition:
+                    MobPositionPacket mpPacket = new MobPositionPacket();
+                    mpPacket.Unpack(msg);
+                    ClientGameManager.Instance.HandleMobMovement(mpPacket);
+                    break;
             }
         }
     }

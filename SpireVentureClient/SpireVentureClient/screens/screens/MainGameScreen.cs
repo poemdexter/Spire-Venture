@@ -127,7 +127,7 @@ namespace SpireVenture.screens.screens
             SpriteFont font = screenManager.Font;
 
             // get our transformation matrix so we can center camera on player
-            ClientGameManager.Instance.CheckForEntity(ClientGameManager.Instance.Username);
+            ClientGameManager.Instance.CheckForPlayerEntity(ClientGameManager.Instance.Username);
             Vector2 lerpPos = ClientGameManager.Instance.LerpPlayer(ClientGameManager.Instance.PlayerEntities[ClientGameManager.Instance.Username]);
             Matrix transformMatrix = Matrix.CreateTranslation(-lerpPos.X + graphics.Viewport.Width / 2,
                                                               -lerpPos.Y + graphics.Viewport.Height / 2,

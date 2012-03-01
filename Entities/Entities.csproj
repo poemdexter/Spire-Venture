@@ -101,6 +101,8 @@
     <Compile Include="actions\ChangeDeltaPosition.cs" />
     <Compile Include="actions\ChangeInputSequence.cs" />
     <Compile Include="components\InputSequence.cs" />
+    <Compile Include="components\MobID.cs" />
+    <Compile Include="components\Movement.cs" />
     <Compile Include="components\Position.cs" />
     <Compile Include="components\PreviousPosition.cs" />
     <Compile Include="components\Username.cs" />

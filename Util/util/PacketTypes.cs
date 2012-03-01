@@ -22,7 +22,8 @@ namespace Util.util
         ChatMessage,
         PlayerPosition,
         InputsPacket,
-        Disconnect
+        Disconnect,
+        MobPosition
     }
 
     public class UsernameKeywordComboPacket : iPacket
@@ -84,6 +85,30 @@ namespace Util.util
         {
             username = msg.ReadString();
             message = msg.ReadString();
+        }
+    }
+
+    public class MobPositionPacket : iPacket
+    {
+        public PacketType packetType { get { return PacketType.MobPosition; } }
+        public string username { get; set; }
+        public Vector2 position { get; set; }
+        public int id { get; set; }
+
+        public NetOutgoingMessage Pack(NetOutgoingMessage msg)
+        {
+            msg.Write((byte)packetType);
+            msg.Write(username);
+            msg.Write(position);
+            msg.Write(id);
+            return msg;
+        }
+
+        public void Unpack(NetIncomingMessage msg)
+        {
+            username = msg.ReadString();
+            position = msg.ReadVector2();
+            id = msg.ReadInt32();
         }
     }
 

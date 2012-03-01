@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mobs>
+  <mob>
+    <name>skeleton</name>
+    <speed>3</speed>
+  </mob>
+  <mob>
+    <name>goblin</name>
+    <speed>3</speed>
+  </mob>
+</mobs>

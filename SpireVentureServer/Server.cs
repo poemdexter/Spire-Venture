@@ -163,6 +163,19 @@ namespace SpireVentureServer
                                 SendUnreliableData(positionPacket, connection);
                             }
                         }
+
+                        // update all mob locations
+                        if (gameManager.mobCount > 0)
+                        {
+                            foreach (Entity mob in gameManager.Mobs)
+                            {
+                                MobPositionPacket positionPacket = new MobPositionPacket();
+                                positionPacket.username = (mob.GetComponent("Username") as Username).UserNm;
+                                positionPacket.position = (mob.GetComponent("Position") as Position).Vector2Pos;
+                                positionPacket.id = (mob.GetComponent("MobID") as MobID).ID;
+                                SendUnreliableData(positionPacket, connection);
+                            }
+                        }
                     }
 
                     nextUpdate += (1.0 / GameConstants.SERVER_UPDATE_RATE);

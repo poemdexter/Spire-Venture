@@ -17,7 +17,12 @@ namespace SpireVentureServer.managers
     {
         public Dictionary<string, PlayerSave> PlayerSaves;  // holds player data
         public Dictionary<string, Entity> PlayerEntities;  // holds player entities
+        public List<Entity> Mobs;
         public BiDictionary RUIDUsernames;
+        public MobFactory mobFactory;
+
+        // TODO B: Fuck me this is temp
+        public int mobCount = 0;
 
         private bool running = false;
         double now = 0;
@@ -27,7 +32,9 @@ namespace SpireVentureServer.managers
         {
             PlayerSaves = new Dictionary<string, PlayerSave>();
             PlayerEntities = new Dictionary<string, Entity>();
+            Mobs = new List<Entity>();
             RUIDUsernames = new BiDictionary();
+            mobFactory = new MobFactory();
         }
 
         public void Start()
@@ -48,9 +55,25 @@ namespace SpireVentureServer.managers
         private void Tick()
         {
             // TODO D: check if time to save players
+
+            if (mobCount == 0)
+            {
+                Mobs.Add(mobFactory.getNewMob("skeleton"));
+                mobCount++;
+            }
+
+            HandleMobsMoving();
         }
 
-        // TODO D: This is really sloppy way to move players
+        private void HandleMobsMoving()
+        {
+            foreach (Entity mob in Mobs)
+            {
+                mob.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2((mob.GetComponent("Movement") as Movement).Velocity, 0)));
+            }
+        }
+
+        // TODO D: This is really sloppy way to move players (5s should be part of velocity of player)
         public void HandlePlayerMoving(string username, InputsPacket inPacket)
         {
             Entity player = PlayerEntities[username];

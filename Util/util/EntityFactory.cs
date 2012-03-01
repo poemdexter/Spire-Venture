@@ -29,10 +29,48 @@ namespace Util.util
             return newPlayer;
         }
 
+        public static Entity GetNewMobEntityTemplate()
+        {
+            return GetNewMobEntityTemplate(-1);
+        }
+
+        public static Entity GetNewMobEntityTemplate(int ID)
+        {
+            Entity newMob = new Entity();
+
+            newMob.AddComponent(new Position(GameConstants.DefaultStartPosition));
+            newMob.AddComponent(new PreviousPosition(GameConstants.DefaultStartPosition));
+
+            if (ID == -1)
+                newMob.AddComponent(new MobID(UMID));
+            else
+                newMob.AddComponent(new MobID(ID));
+
+            newMob.AddAction(new ChangeDeltaPosition());
+            newMob.AddAction(new ChangeAbsPosition());
+            newMob.AddAction(new ChangeInputSequence());
+            newMob.AddAction(new ChangeAbsPreviousPosition());
+            newMob.AddAction(new ChangeCurrentSmoothing());
+
+            return newMob;
+        }
+
         // *** MAP ENTITY TO SAVE FILE HERE ***
         public static void DumpEntityIntoSaveFile(Entity ent, PlayerSave save)
         {
             save.Position = (ent.GetComponent("Position") as Position).Vector2Pos;
+        }
+
+        // for unique mob ids
+        private static int CurrentMobID = 0;
+        private static int UMID
+        {
+            get
+            {
+                if (CurrentMobID++ > 200)
+                    CurrentMobID = 0;
+                return CurrentMobID;
+            }
         }
     }
 }

@@ -150,6 +150,7 @@ namespace SpireVenture.managers
             SpriteDict = new Dictionary<string, Texture2D>();
 
             SpriteDict.Add("bandit", content.Load<Texture2D>("entity/char_bandit"));
+            SpriteDict.Add("skeleton", content.Load<Texture2D>("entity/char_skeleton"));
             SpriteDict.Add("lab", content.Load<Texture2D>("screen/lab"));
         }
     }
